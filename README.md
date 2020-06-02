@@ -1,5 +1,11 @@
 # Regex-Generator
 
+Usage : 
+
+```
+python3 project.py
+```
+
 # parser.py
 
 先找出最長的 Common String 作為基底
