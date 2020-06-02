@@ -37,7 +37,6 @@ def split_str(strings_set, filtered_set) :
     for i in range(1,len(filtered_set)+1) :
         filtered_permutation.extend(list(permutations(filtered_set, i)))
 
-    print("PERMUTATION: ", filtered_permutation)
     # 嘗試各種排列方式
     splited_result = {}
     for cutter_point in filtered_permutation:
@@ -65,32 +64,25 @@ def split_str(strings_set, filtered_set) :
 def generalizer(arr, filtered_set, gene) :
     target = []
     for i in range(len(arr[0])) :
-        print()
         column = [val[i] for val in arr]
         
-        print("COLUMN: ", column)
+        # 如果大家開頭都沒東西
         if i == 0 and len(''.join(column)) == 0 :
-            target.append(['^'])
-            print("SAVE  :  ['^']", )
-
+            target.append('^')
         
+        # 如果那列是有對應的 Common string
         elif type(column[0]) == int :
-            target.append([filtered_set[column[0]]])
-            print(f"SAVE  :  ['{filtered_set[column[0]]}']")
+            target.append(filtered_set[column[0]])
 
-
+        # 如果大家在最後面都沒東西
         elif i == len(arr[0])-1 and len(''.join(column)) == 0 :
-            target.append(['$'])
-            print("SAVE  :  ['$']")
+            target.append('$')
 
-        
-        else : 
-            
-            print(column, gene)
+        # 其他區塊，另外 Parse，這裡要放基因
+        else :             
             possible = parser(column, gene)
-            print("Generalize  \t: ", possible)
-        
-        print()
+            target.append(possible)
+            # print(column, "->", possible)
 
     return target
     
@@ -105,10 +97,14 @@ def fitness() :
     pass
 
 if __name__ == "__main__":
-        
+    
+    import random
     # target = ['ASHIT', 'ASH1P', 'ASHRIMP', "BSHIP"]
 
     # target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
+
+    gene   = [0,1,2,3,4,5,6,11,0xe]
+    random.shuffle(gene) 
 
     target = [
         # 'https://blog.csdn.net/vitaminc4/article/details/78922612', 
@@ -138,8 +134,8 @@ if __name__ == "__main__":
         print(f"\t{k}")
         for arr in v :
             print(f"\t\t{arr} ")
-        g_res = generalizer(v, filtered_set)
+        g_res = generalizer(v, filtered_set, gene)
         print('Generalize Result:')
-        print('\t', g_res)
+        print('\t', ''.join(g_res))
 
 

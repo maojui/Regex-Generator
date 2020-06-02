@@ -19,6 +19,8 @@ def common_string(strings):
     return cs_set
 
 def _longest_common_subseqence(s1, s2):
+    if s1 == '' or s2 == '':
+        return ''
     matrix = [["" for x in range(len(s2))] for x in range(len(s1))]
     for i in range(len(s1)):
         for j in range(len(s2)):

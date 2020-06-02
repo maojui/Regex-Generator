@@ -19,7 +19,7 @@ from utils import longest_common_subseqence as lcs
 #   13  [???]       char or     | -n
 #   14  (??|???|?)  string or   | fitness = -sum(entropy of each string) * n
 
-__all__ = ['gene']
+__all__ = ['parser']
 
 def numbers(process, string):
     for idx,c in enumerate(string):
@@ -77,7 +77,7 @@ def string_or(process, string) :
             process[idx] = 'e'
     return process
 
-gene = {
+__gene = {
     # 跟 Rule 有關的
     0x0   : numbers,
     0x1   : upper_alpha,
@@ -125,14 +125,18 @@ regex_table = {
     'e' :  'e',
 }
 
+# 把字串重新歸類，照 __gene dictionary 做事
+# ABC -> 5 5 5
 def encoder(columns, order):
     output  = []
     process = [[None] * len(c) for c in columns]
     for idx, c in enumerate(columns) :
         for i in order:
-            process[idx] = gene[i](process[idx], c)
+            process[idx] = __gene[i](process[idx], c)
     return process
 
+# 化簡，算數量
+# [['e', 'e', 'e', 'e', 'e'], ['e', 'e'], ['e', 'e', 'e', 'e']] -> [[('e', 5)], [('e', 2)], [('e', 4)]]
 def type_counter(columns) :
     output = []
     for column in columns :
@@ -149,6 +153,7 @@ def type_counter(columns) :
         output.append(out)
     return output
 
+# Recursive 的找出最長的序列，看 test.py
 def find_most_sequence(seq, target, cur=[], inc=0, idx=0) :
     if target == '' :
         return cur, inc
@@ -177,6 +182,7 @@ def find_most_sequence(seq, target, cur=[], inc=0, idx=0) :
     else :
         return [], 0
 
+# 算 rule 的次數
 def freq_counter(cnts) :
     std = np.std(cnts)
     avg = np.mean(cnts)
@@ -199,8 +205,8 @@ def freq_counter(cnts) :
             freq = '+'
     return freq
 
+# 輸出 Regex
 def format_regex(subsequences, subsequence):
-
     regex = ''
     for i in range(len(subsequences[0])) :
         tmp = ''
@@ -214,20 +220,22 @@ def format_regex(subsequences, subsequence):
             tmp = regex_table[subsequence[i//2]]
             if tmp in ['e'] : # 跟 value 有關的
                 tmp = formatting[tmp](targets)
-
-            else :
+            else : # 跟 Rule 有關的
                 tmp += freq_counter(cnts)
-
         regex += tmp
     return regex
 
-
+# 全部搞在一起
 def parser(column, gene):
 
     p_column = encoder(column, gene)
     f_columns = type_counter(p_column)
     type_list = [''.join(map(str, [idx for idx, count in col])) for col in f_columns]
     subsequence = lcs(type_list)
+    
+    # 轉換完後，如果各位沒有共同的子序列，這段沒有比較的意義，直接退出
+    if subsequence == '' :
+        return '.*'
 
     seq_count = []
     for ff in f_columns :
@@ -259,13 +267,14 @@ def parser(column, gene):
 
 
 if __name__ == "__main__":
-        
-    column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
-    
-    gene   = [0,1,2,3,4,5,6,11,0xe]
-    random.shuffle(gene) 
 
-    p_column = encoder(column,gene)
+    # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
+    column = ['zznew', 'tw', 'kkab']
+    
+    order   = [0,1,2,3,4,5,6,0xb,0xe]
+    random.shuffle(order) 
+
+    p_column = encoder(column,order)
 
     f_columns = type_counter(p_column)
     type_list = [''.join(map(str, [idx for idx, count in col])) for col in f_columns]
