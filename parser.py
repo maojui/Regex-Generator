@@ -10,21 +10,23 @@ def cs_filter(cs_set) :
     """
     # 列出可能有用的 set 
     cs_set = sorted(cs_set, key=lambda x: -len(x))
-    prob = set([cs_set[0]])
-    for cs in cs_set:
-        for p in prob :
-            if cs in p :
-                break
-        else :
-            prob.add(cs)
-            continue
+    if len(cs_set) > 0 : 
+        prob = list(set([cs_set[0]]))
+        for cs in cs_set:
+            for p in prob :
+                if cs in p :
+                    break
+                else :
+                    prob.append(cs)
+                    continue
 
-    avg = round((sum(map(len,prob))/len(prob))) #? 怪怪
+        avg = round((sum(map(len,prob))/len(prob))) #? 怪怪
 
-    def rule(x):
-        return len(x) >= avg
-
-    return filter(rule ,prob)
+        def rule(x):
+            return len(x) >= avg and len(x) > 1
+        return filter(rule ,prob)
+    else :
+        return []
 
 def split_str(strings_set, filtered_set) :
     """
@@ -58,8 +60,10 @@ def split_str(strings_set, filtered_set) :
             if len(_pass) == len(strings_set) :
                 used = sorted(cutter_point, key=lambda x: filtered_set.index(x))
                 splited_result[' & '.join(used)] = _pass
-            
-    return splited_result
+    if len(splited_result) > 0 :
+        return splited_result
+    else :
+        return { None: [[s] for s in strings_set]}
 
 def generalizer(arr, filtered_set, gene) :
     target = []
@@ -80,21 +84,11 @@ def generalizer(arr, filtered_set, gene) :
 
         # 其他區塊，另外 Parse，這裡要放基因
         else :             
-            possible = parser(column, gene)
+            possible, seq = parser(column, gene)
             target.append(possible)
             # print(column, "->", possible)
 
     return target
-    
-
-def fitness() :
-    # regex 長度 (-) 
-    # or 數量
-    # 單純度 (.*) ENTROPY
-    # 基因分層分數
-    # 覆蓋率 (可 generalize 度)
-    # Negative
-    pass
 
 if __name__ == "__main__":
     
@@ -130,6 +124,7 @@ if __name__ == "__main__":
     print()
     print("Split by set\t\t: ")
     sr = split_str(target, filtered_set)
+    print(sr)
     for k,v in sr.items():
         print(f"\t{k}")
         for arr in v :
