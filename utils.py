@@ -1,22 +1,25 @@
 def common_string(strings):
     cs_set = None
     strings = sorted(strings, key=lambda x: len(x))
-    for T in strings[1:] :
-        tmp_set = set()
-        # DP table
-        counter = [[0]*(len(T)+1) for x in range(len(strings[0])+1)] 
-        for i in range(len(strings[0])):
-            for j in range(len(T)):
-                if strings[0][i] == T[j]:
-                    c = counter[i][j] + 1
-                    counter[i+1][j+1] = c
-                    for cc in range(c) :
-                        tmp_set.add(strings[0][i-cc:i+1])
-        if cs_set == None : 
-            cs_set = tmp_set
-        cs_set = cs_set.intersection(tmp_set)
+    if len(strings) > 1 : 
+        for T in strings[1:] :
+            tmp_set = set()
+            # DP table
+            counter = [[0]*(len(T)+1) for x in range(len(strings[0])+1)] 
+            for i in range(len(strings[0])):
+                for j in range(len(T)):
+                    if strings[0][i] == T[j]:
+                        c = counter[i][j] + 1
+                        counter[i+1][j+1] = c
+                        for cc in range(c) :
+                            tmp_set.add(strings[0][i-cc:i+1])
+            if cs_set == None : 
+                cs_set = tmp_set
+            cs_set = cs_set.intersection(tmp_set)
 
-    return cs_set
+        return cs_set
+    else :
+        return strings
 
 def _longest_common_subseqence(s1, s2):
     if s1 == '' or s2 == '':

@@ -1,7 +1,9 @@
 import string
-from itertools import permutations
+from const import *
 from maker import parser
+from evalute import *
 from utils import common_string
+from itertools import permutations
 
 def cs_filter(cs_set) :
     """
@@ -9,26 +11,28 @@ def cs_filter(cs_set) :
     從 cs_set 中拿出需要的有交集的人之中比較長 (>平均值) 的那幾個當作固定點
     """
     # 列出可能有用的 set 
+    cs_set = filter(lambda x: len(x)>5, cs_set)
     cs_set = sorted(cs_set, key=lambda x: -len(x))
+
     if len(cs_set) > 0 : 
-        prob = list(set([cs_set[0]]))
+        prob = [cs_set[0]]
         for cs in cs_set:
             for p in prob :
                 if cs in p :
                     break
-                else :
-                    prob.append(cs)
-                    continue
+            else :
+                prob.append(cs)
+                continue
 
         avg = round((sum(map(len,prob))/len(prob))) #? 怪怪
 
         def rule(x):
-            return len(x) >= avg and len(x) > 1
+            return len(x) >= avg or len(x) > 5
         return filter(rule ,prob)
     else :
         return []
 
-def split_str(strings_set, filtered_set) :
+def split_fixed(strings_set, filtered_set) :
     """
     filtered_set 是選過適合當固定點的人
     把已知的部分切出來，分區塊處理
@@ -36,7 +40,7 @@ def split_str(strings_set, filtered_set) :
     
     # 列出這些固定 substring 所有排列方式
     filtered_permutation = []
-    for i in range(1,len(filtered_set)+1) :
+    for i in range(len(filtered_set), 0, -1) :
         filtered_permutation.extend(list(permutations(filtered_set, i)))
 
     # 嘗試各種排列方式
@@ -58,15 +62,14 @@ def split_str(strings_set, filtered_set) :
         else :
             # 砍掉有人不符合的排列方式
             if len(_pass) == len(strings_set) :
-                used = sorted(cutter_point, key=lambda x: filtered_set.index(x))
+                used = cutter_point
                 splited_result[' & '.join(used)] = _pass
-    if len(splited_result) > 0 :
-        return splited_result
-    else :
-        return { None: [[s] for s in strings_set]}
+                return splited_result
+    return { None: [[s] for s in strings_set]}
 
-def generalizer(arr, filtered_set, gene) :
+def generalizer(arr, filtered_set, gene, positive=[], negative=[]) :
     target = []
+    value = 0
     for i in range(len(arr[0])) :
         column = [val[i] for val in arr]
         
@@ -76,7 +79,13 @@ def generalizer(arr, filtered_set, gene) :
         
         # 如果那列是有對應的 Common string
         elif type(column[0]) == int :
-            target.append(filtered_set[column[0]])
+            s = ''
+            for c in list(filtered_set[column[0]]) :
+                if c in ESCAPE :
+                    s += "\\" + c
+                else :
+                    s += c
+            target.append(s)
 
         # 如果大家在最後面都沒東西
         elif i == len(arr[0])-1 and len(''.join(column)) == 0 :
@@ -85,10 +94,12 @@ def generalizer(arr, filtered_set, gene) :
         # 其他區塊，另外 Parse，這裡要放基因
         else :             
             possible, seq = parser(column, gene)
+            seq = fitness(possible, seq, positive, negative)
             target.append(possible)
             # print(column, "->", possible)
+            value += seq
 
-    return target
+    return target, value
 
 if __name__ == "__main__":
     
@@ -111,6 +122,9 @@ if __name__ == "__main__":
         'https://aadm.nctu.edu.tw/ggmood',
     ]
 
+
+
+
     cs_set = common_string(target)
     print("Common string set \t: ")
     print("\t", list(cs_set))       
@@ -123,14 +137,16 @@ if __name__ == "__main__":
         print(f"\t{i} = {s}")
     print()
     print("Split by set\t\t: ")
-    sr = split_str(target, filtered_set)
-    print(sr)
-    for k,v in sr.items():
+    sf = split_fixed(target, filtered_set)
+    print(sf)
+    for k,v in sf.items():
         print(f"\t{k}")
         for arr in v :
             print(f"\t\t{arr} ")
-        g_res = generalizer(v, filtered_set, gene)
+        g_res, fitness = generalizer(v, filtered_set, gene, target)
+        print(g_res)
         print('Generalize Result:')
         print('\t', ''.join(g_res))
+        print('fitness:', fitness)
 
 

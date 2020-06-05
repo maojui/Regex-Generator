@@ -1,31 +1,31 @@
 import re
 
 score_table = {
-    '0': 9,
+    '0': 10,
     '1': 26,
     '2': 26,
     '3': 52,
     '4': 16,
     '5': 16,
-    '6': 60,
+    '6': 72,
     '7': 5,
     '8': 1,
     '9': 100,
-    'a': 5,
-    'b': 5,
-    'c': 30,
-    'd': 10,
-    'e': 40,
-    'f': 10,
+    'a': 20,
+    'b': 20,
+    'c': 100,
+    'd': 100,
+    'e': 100,
+    'f': 100,
 }
 
-def fitness(regex, seq, target, negative=[]) :
+def fitness(regex, seq, positive, negative=[]) :
     
     # init
-    score = 50
+    score = 1000
 
     # 可以 Match
-    for t in target :
+    for t in positive :
         if not re.search(regex, t) :
             print(regex,t)
             return -1000
@@ -39,23 +39,24 @@ def fitness(regex, seq, target, negative=[]) :
     score -= len(regex)
     # or 數量
     if '|' in regex :
-        score += 10
-        score -= regex.count('|')
+        score -= 10 * (regex.count('|')-3)
 
+    # 覆蓋率 (可 generalize 度)
     # 基因分層分數
     for g in set(seq) :
         score -= score_table[g]
     
     # 單純度 (.*) ENTROPY
     score -= 10 * len(set(seq))
+    score -= 10 * len(seq)
 
-    # 覆蓋率 (可 generalize 度)
-    print("??")
     return score
+
+__all__ = ['fitness']
 
 if __name__ == "__main__":
     
-    target = [
+    positive = [
         'https://blog.csdn.net/vitaminc4/article/details/78922612', 
         'https://transbiz.com.tw/regex-regular-expression-ga-%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F/', 
         'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
@@ -73,6 +74,6 @@ if __name__ == "__main__":
         ('^https://.+', '9')
     ]
     for r in regexs:
-        print(fitness(r[0], r[1], target))
+        print(fitness(r[0], r[1], positive))
 
 

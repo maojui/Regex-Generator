@@ -1,5 +1,6 @@
 import random
 import string
+from const import *
 import numpy as np
 from utils import longest_common_subseqence as lcs
 
@@ -103,8 +104,6 @@ def char_string_or(process, string) :
             process[idx] = 'f'
     return process
 
-SYMBOL = '''!@#$%^&*()[]\';./,<>?:"{}-=`~|+-\/'''
-ESCAPE = '{^$.|*+?}'
 
 
 __gene = {
@@ -123,9 +122,9 @@ __gene = {
     # 跟 value 有關的
     0xa   : escape,              #  [{}^$.|*+?]    escape
     0xb   : symbol,              #  [SYMBOLS]      symbol 
-    0xc   : char_range,          #  [?-?^?]        range                | #^
-    0xd   : char_or,             #  [???]          char or              | -n
-    0xe   : string_or,           #  (??|???|?)     string or            | fitness = -sum(entropy of each string) * n
+    0xc   : char_range,          #  [?-?^?]        range                
+    0xd   : char_or,             #  [???]          char or              
+    0xe   : string_or,           #  (??|???|?)     string or            
     0xf   : char_string_or,      #  ([???]|[???])  char & string or 
 } 
 
@@ -239,8 +238,6 @@ def escape_format(strs, cnts):
     return f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts)
 
 def symbol_format(strs, cnts):
-    print(symbol, strs, cnts)
-    print(f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts))
     return f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts)
 
 def char_range_format(strs, cnts):
@@ -330,8 +327,6 @@ def parser(column, gene):
         return '.*'
 
     seq_count = []
-    print(subsequence)
-    print(f_columns)
     for ff in f_columns :
         if len(subsequence) < 10 :
             targets, cnt = find_most_sequence(ff, subsequence)
@@ -341,8 +336,13 @@ def parser(column, gene):
         cnt = 0
         for i in range(1, len(ff)+1) :
             if i in targets :
-                l_count.append(cnt)
-                l_count.append(ff[i-1][1])
+                if ff[i-1][0] != '9':
+                    l_count.append(cnt)
+                    l_count.append(ff[i-1][1])
+                else : 
+                    # 如果也是 any 就合併進去
+                    l_count.append(0)
+                    l_count.append(ff[i-1][1] + cnt)
                 cnt = 0
             else :
                 cnt += ff[i-1][1]
