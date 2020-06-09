@@ -104,8 +104,6 @@ def char_string_or(process, string) :
             process[idx] = 'f'
     return process
 
-
-
 __gene = {
     # 跟 Rule 有關的
     0x0   : numbers,             #  [0-9]           numbers
@@ -359,9 +357,6 @@ def parser(column, gene):
         strs.append(tmp)
     
     return format_regex(strs, subsequence), subsequence
-
-
-
 
 if __name__ == "__main__":
 

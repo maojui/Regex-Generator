@@ -15,24 +15,24 @@ target = [
 #     'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
 #     'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438', 
 #     'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596', 
-    'https://kkabb.nctu.edu.tw/dcspc/?p=9872',
+    'https://kakbb.nctu.edu.tw/dcspc/?p=9872',
     'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596', 
     'https://aadmm.nctu.edu.tw/ggmood',
 ]
 
-target = [
-    'maojui0427@gmail.com',
-    'maojui0437@gmail.com',
-    'maojui0447@gmail.com',
-    # 'j6e1n1n2y@gmail.com',
-    # 'a5180352@gmail.com',
-    # 'toregenerate@gmail.com'
-]
+# target = [
+#     'maojui0427@gmail.com',
+#     'maojui0437@gmail.com',
+#     'maojui0447@gmail.com',
+#     'j6e1n1n2y@gmail.com',
+#     'a5180352@gmail.com',
+#     'toregenerate@gmail.com'
+# ]
 
 import os
 import base64
 # target = [ base64.b64encode(os.urandom(random.randint(i,64))).decode() for i in range(10)]
-target = [ base64.b64encode(os.urandom(64)).decode() for i in range(10)]
+# target = [ base64.b64encode(os.urandom(64)).decode() for i in range(10)]
 
 print()
 print("Target : ")
@@ -60,7 +60,7 @@ if DEBUG :
 sr = split_fixed(target, filtered_set)
 gene   = [0,1,2,3,4,5,6,7,8,9,0xa,0xb,0xd,0xe,0xf]
 random.shuffle(gene)
-# gene = [0, 9 ,1,2,3,4,5,6,7,8] 
+# gene = [0,5, 9 ,1,2,3,4,5,6,7,8] 
 
 
 for k,v in sr.items():
