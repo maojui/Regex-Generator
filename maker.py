@@ -82,7 +82,7 @@ def symbol(process, string) :
 
 
 def char_range(process, string) :
-    raise NotImplementedError("Nothing Here.")
+    # raise NotImplementedError("Nothing Here.")
     return process
 
 
