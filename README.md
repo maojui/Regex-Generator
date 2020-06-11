@@ -5,7 +5,7 @@ https://docs.google.com/presentation/d/1iapTfVhuES_MD0Q3F4gFzuFOfiitQasKx4Ff0uKS
 Usage : 
 
 ```
-python3 project.py
+python3 main.py
 ```
 
 # parser.py
