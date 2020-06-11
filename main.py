@@ -15,27 +15,27 @@ DEBUG = False
 target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
 
 target = [
-    # 'https://blog.csdn.net/vitaminc4/article/details/78922612', 
-    # 'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
-    # 'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438', 
-    # 'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596', 
-    # 'https://kakbb.nctu.edu.tw/dcspc/?p=9872',
-    # 'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596', 
-    # 'https://aadmm.nctu.edu.tw/ggmood',
+    'https://blog.csdn.net/vitaminc4/article/details/78922612', 
+    'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
+    'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438', 
+    'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596', 
+    'https://kakbb.nctu.edu.tw/dcspc/?p=9872',
+    'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596', 
+    'https://aadmm.nctu.edu.tw/ggmood',
 ]
 
-target = [
-    'maojui0427@gmail.com',
-    'maojui0437@gmail.com',
-    'maojui0447@gmail.com',
-    'j6e1n1n2y@gmail.com',
-    'a5180352@gmail.com',
-    'toregenerate@gmail.com'
-]
+# target = [
+#     'maojui0427@gmail.com',
+#     'maojui0437@gmail.com',
+#     'maojui0447@gmail.com',
+#     'j6e1n1n2y@gmail.com',
+#     'a5180352@gmail.com',
+#     'toregenerate@gmail.com'
+# ]
 
 import os
 import base64
-# target = [ base64.b64encode(os.urandom(random.randint(i,64))).decode() for i in range(10)]
+target = [ base64.b64encode(os.urandom(random.randint(i,64))).decode() for i in range(10)]
 # target = [ base64.b64encode(os.urandom(64)).decode() for i in range(10)]
 
 print()
@@ -56,6 +56,7 @@ for val in sr.values():
     
     pop = [random.sample(range(16),16) for _ in range(POPULATION)]
     i = 1
+
     while i <= GENERATION : 
         print(f"{i} Generation : ")
         for idx, gene in enumerate(pop) :

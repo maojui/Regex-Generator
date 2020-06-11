@@ -322,11 +322,11 @@ def parser(column, gene):
     
     # 轉換完後，如果各位沒有共同的子序列，這段沒有比較的意義，直接退出
     if subsequence == '' :
-        return '.*'
+        return '.*', '9'
 
     seq_count = []
     for ff in f_columns :
-        if len(subsequence) < 10 :
+        if len(ff) < 20 :
             targets, cnt = find_most_sequence(ff, subsequence)
         else :
             targets, cnt = find_sequence(ff, subsequence)
