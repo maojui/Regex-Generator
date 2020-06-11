@@ -14,7 +14,6 @@ DEBUG = False
 # target = ['ASHIT', 'ASH1P', 'ASHRIMP', "BSHIP"]
 target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
 
-<<<<<<< HEAD
 target = [
     'https://blog.csdn.net/vitaminc4/article/details/78922612', 
     'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
@@ -24,17 +23,6 @@ target = [
     'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596', 
     'https://aadmm.nctu.edu.tw/ggmood',
 ]
-=======
-# target = [
-#     'https://blog.csdn.net/vitaminc4/article/details/78922612',
-#     'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
-#     'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438',
-#     'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596',
-#     'https://kakbb.nctu.edu.tw/dcspc/?p=9872',
-#     'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596',
-#     'https://aadmm.nctu.edu.tw/ggmood',
-# ]
->>>>>>> da185bd5fc6be5e54266d2050dc7c3546b4088a1
 
 # target = [
 #     'maojui0427@gmail.com',
@@ -45,15 +33,10 @@ target = [
 #     'toregenerate@gmail.com'
 # ]
 
-<<<<<<< HEAD
 import os
 import base64
 target = [ base64.b64encode(os.urandom(random.randint(i,64))).decode() for i in range(10)]
 # target = [ base64.b64encode(os.urandom(64)).decode() for i in range(10)]
-=======
-# target = [base64.b64encode(os.urandom(random.randint(i, 64))).decode() for i in range(10)]
-# target = [base64.b64encode(os.urandom(64)).decode() for i in range(10)]
->>>>>>> da185bd5fc6be5e54266d2050dc7c3546b4088a1
 
 print()
 print("Target : ")
@@ -72,12 +55,8 @@ BEST_GENE = None
 for val in sr.values():
     pop = [random.sample(range(16), 16) for _ in range(POPULATION)]
     i = 1
-<<<<<<< HEAD
 
     while i <= GENERATION : 
-=======
-    while i <= GENERATION:
->>>>>>> da185bd5fc6be5e54266d2050dc7c3546b4088a1
         print(f"{i} Generation : ")
         for idx, gene in enumerate(pop):
             # print(idx, end=" ")
