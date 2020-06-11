@@ -1,4 +1,7 @@
 def common_string(strings):
+    """
+    Find all common substring of `strings` by DP.
+    """
     cs_set = None
     strings = sorted(strings, key=lambda x: len(x))
     if len(strings) > 1:
