@@ -8,8 +8,16 @@ from itertools import permutations
 
 def cs_filter(cs_set):
     """
-    cs_set 是所有字串共有的 substring。
-    從 cs_set 中拿出需要的有交集的人之中比較長 (>平均值) 的那幾個當作固定點
+    從 cs_set 中將有交集的 substring 取出最長的
+    EX: 
+        h, t, p, s, ht, tt, tp, ps, htt, ttp, tps, http, ttps, https 
+        => https
+
+    Input : 
+        @cs_set - 所有字串共有的 substring
+
+    Output:
+        從幾組最長的 Substring 中，僅回傳長度大於平均值的那幾個。
     """
     # 列出可能有用的 set
     cs_set = filter(lambda x: len(x) > 5, cs_set)
