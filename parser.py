@@ -8,6 +8,7 @@ from itertools import permutations
 
 def cs_filter(cs_set):
     """
+<<<<<<< HEAD
     從 cs_set 中將有交集的 substring 取出最長的
     EX: 
         h, t, p, s, ht, tt, tp, ps, htt, ttp, tps, http, ttps, https 
@@ -18,6 +19,12 @@ def cs_filter(cs_set):
 
     Output:
         從幾組最長的 Substring 中，僅回傳長度大於平均值的那幾個。
+=======
+    `cs_set` 是所有字串共有的 substring 的集合。\\
+    從 `cs_set` 中拿出有交集的部分，再把比較長 (>平均值) 的那幾個當作固定點
+    
+    For example: `['ht', 'htt', 'http', 'https', 'abcde'] -> ['https', 'abcde']`
+>>>>>>> e0913a5372869609b2f7c3f14c07fdc10d91e3cd
     """
     # 列出可能有用的 set
     cs_set = filter(lambda x: len(x) > 5, cs_set)
@@ -44,7 +51,7 @@ def cs_filter(cs_set):
 
 def split_fixed(strings_set, filtered_set):
     """
-    filtered_set 是選過適合當固定點的人。
+    `filtered_set` 是選過適合當固定點的人。\\
     把已知的部分切出來，分區塊處理
     """
 
