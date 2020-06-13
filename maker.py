@@ -98,8 +98,9 @@ def symbol(process, string):
 
 
 def char_range(process, string):
+    data_set = WORD[:-1]+SYMBOL+ESCAPE
     for idx, c in enumerate(string):
-        if process[idx] == None and c in WORD[:-1]:
+        if process[idx] == None and c in data_set:
             process[idx] = 'c'
     return process
 
@@ -279,6 +280,8 @@ def char_range_format(strs, cnts):
     lc_min, lc_max = None, None
     uc_min, uc_max = None, None
     d_min, d_max = None, None
+    symbols = ''
+    escape = ''
     for c in set(''.join(strs)) :
         if c in string.ascii_lowercase :
             idx = string.ascii_lowercase.find(c)
@@ -298,11 +301,12 @@ def char_range_format(strs, cnts):
             if d_max == None: d_max = idx
             if idx < d_min: d_min = idx
             if idx > d_max: d_max = idx
+        if c in SYMBOL and not c in ESCAPE :
+            symbols += c
+        if c in ESCAPE :
+            escape += '\\' + c
     
     output = ''
-    print(lc_min, lc_max)
-    print(uc_min, uc_max)
-    print(d_min, d_max)
     if lc_min != None and lc_max != None:
         if lc_min == lc_max : 
             output += string.ascii_lowercase[lc_min]
@@ -319,7 +323,7 @@ def char_range_format(strs, cnts):
         else :
             output += f'{string.digits[d_min]}-{string.digits[d_max]}'
 
-    return f"[{output}]" + freq_counter(cnts)
+    return f"[{output + symbols + escape}]" + freq_counter(cnts)
 
 
 def char_or_format(strs, cnts):
@@ -452,7 +456,7 @@ def parser(column, gene):
 if __name__ == "__main__":
 
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
-    column = ['zznew', 'tw', 'kkab', 'ZZZZ', '0123']
+    column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
 
     order = [0xc, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
     # random.shuffle(order)
