@@ -98,7 +98,9 @@ def symbol(process, string):
 
 
 def char_range(process, string):
-    # raise NotImplementedError("Nothing Here.")
+    for idx, c in enumerate(string):
+        if process[idx] == None and c in WORD[:-1]:
+            process[idx] = 'c'
     return process
 
 
@@ -273,7 +275,51 @@ def symbol_format(strs, cnts):
 
 
 def char_range_format(strs, cnts):
-    raise NotImplementedError("XD")
+
+    lc_min, lc_max = None, None
+    uc_min, uc_max = None, None
+    d_min, d_max = None, None
+    for c in set(''.join(strs)) :
+        if c in string.ascii_lowercase :
+            idx = string.ascii_lowercase.find(c)
+            if lc_min == None: lc_min = idx
+            if lc_max == None: lc_max = idx
+            if idx < lc_min: lc_min = idx
+            if idx > lc_max: lc_max = idx
+        if c in string.ascii_uppercase :
+            idx = string.ascii_uppercase.find(c)
+            if uc_min == None: uc__min = idx
+            if uc_max == None: uc__max = idx
+            if idx < uc__min: uc__min = idx
+            if idx > uc__max: uc__max = idx
+        if c in string.digits :
+            idx = string.digits.find(c)
+            if d_min == None: d_min = idx
+            if d_max == None: d_max = idx
+            if idx < d_min: d_min = idx
+            if idx > d_max: d_max = idx
+    
+    output = ''
+    print(lc_min, lc_max)
+    print(uc_min, uc_max)
+    print(d_min, d_max)
+    if lc_min != None and lc_max != None:
+        if lc_min == lc_max : 
+            output += string.ascii_lowercase[lc_min]
+        else :
+            output += f'{string.ascii_lowercase[lc_min]}-{string.ascii_lowercase[lc_max]}'
+    if uc_min != None and uc_max != None:
+        if uc_min == uc_max : 
+            output += string.ascii_uppercase[uc_min]
+        else :
+            output += f'{string.ascii_uppercase[uc_min]}-{string.ascii_uppercase[uc_min]}'
+    if d_min != None and d_max != None :
+        if d_min == d_max : 
+            output += string.digits[d_min]
+        else :
+            output += f'{string.digits[d_min]}-{string.digits[d_max]}'
+
+    return f"[{output}]" + freq_counter(cnts)
 
 
 def char_or_format(strs, cnts):
@@ -406,10 +452,10 @@ def parser(column, gene):
 if __name__ == "__main__":
 
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
-    column = ['zznew', 'tw', 'kkab']
+    column = ['zznew', 'tw', 'kkab', 'ZZZZ', '0123']
 
-    order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
-    random.shuffle(order)
+    order = [0xc, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
+    # random.shuffle(order)
 
     t_column = encoder(column, order)
 
