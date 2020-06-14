@@ -159,9 +159,7 @@ def encoder(columns, order):
     for idx, c in enumerate(columns):
         for i in order:
             if idx==0 and type(None) in map(type,process[idx]):
-                print(i, end=' ')
-            process[idx] = __gene[i](process[idx], c)
-    print()
+                process[idx] = __gene[i](process[idx], c)
     return process
 
 
@@ -407,6 +405,41 @@ def format_regex(subsequences, subsequence):
     return regex
 
 
+def find_remain(seq, target, cur=[], inc=0, idx=0):
+    cur = []
+    t_idx = 0
+    start = 0
+    while t_idx < len(target):
+        for i in range(start, len(seq)):
+            if seq[i][0] == target[t_idx]:
+                t_idx += 1
+                cur.append(i+1)
+                start = i + 1
+                break
+    return start
+
+def find_good_sequence(seq, target) :
+    obj = {}
+    for idx, s in enumerate(seq) :
+        sym = s[0]
+        if not sym in obj :
+            obj[sym] = []
+        obj[sym].append((s[1],idx))
+    output = []
+
+    lb = -1 #lower bound
+    for i in range(len(target)) :
+        sym = target[i]
+        ub = len(seq) - find_remain(seq[::-1],target[i+1:][::-1])
+        selectable = obj[sym]
+        # print("BOUND",lb,'~',ub)
+        selectable = list(filter(lambda x: ub > x[1] > lb, selectable))
+        best = sorted(selectable,key=lambda x :-x[0])[0]  
+        lb = best[1]
+        output.append(lb)
+
+    return output
+
 def parser(column, gene):
     """
     全部搞在一起
@@ -423,24 +456,21 @@ def parser(column, gene):
 
     seq_count = []
     for ff in f_columns :
-        if len(ff) < 20 :
-            targets, cnt = find_most_sequence(ff, subsequence)
-        else:
-            targets, cnt = find_sequence(ff, subsequence)
+        targets = find_good_sequence(ff, subsequence)
         l_count = []
         cnt = 0
-        for i in range(1, len(ff)+1):
+        for i in range(0, len(ff)):
             if i in targets:
-                if ff[i-1][0] != '9':
+                if ff[i][0] != '9':
                     l_count.append(cnt)
-                    l_count.append(ff[i-1][1])
+                    l_count.append(ff[i][1])
                 else:
                     # 如果也是 any 就合併進去
                     l_count.append(0)
-                    l_count.append(ff[i-1][1] + cnt)
+                    l_count.append(ff[i][1] + cnt)
                 cnt = 0
             else:
-                cnt += ff[i-1][1]
+                cnt += ff[i][1]
         seq_count.append(l_count)
 
     strs = []
@@ -460,13 +490,12 @@ if __name__ == "__main__":
     
     import base64,random,os
     
-    column = [base64.b64encode(os.urandom(random.randint(i, 64))).decode() for i in range(10)]
-
+    column = [base64.b64encode(os.urandom(random.randint(i,60))).decode() for i in range(10)]
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
     # column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
 
     order = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
-    # random.shuffle(order)
+    random.shuffle(order)
 
     t_column = encoder(column, order)
 
@@ -475,27 +504,34 @@ if __name__ == "__main__":
                  for col in f_columns]
     subsequence = lcs(type_list)
 
-    seq_count = []
+    
+    print(f_columns)
     print(subsequence)
     import time
 
+    seq_count = []
     a = time.time()    
-    for ff in f_columns:
-        if len(subsequence) < 15:
-            targets, cnt = find_most_sequence(ff, subsequence)
-        else:
-            targets, cnt = find_sequence(ff, subsequence)
 
+    for ff in f_columns :
+        targets = find_good_sequence(ff, subsequence)
         l_count = []
         cnt = 0
-        for i in range(1, len(ff)+1):
+        for i in range(0, len(ff)):
             if i in targets:
-                l_count.append(cnt)
-                l_count.append(ff[i-1][1])
+                if ff[i][0] != '9':
+                    l_count.append(cnt)
+                    l_count.append(ff[i][1])
+                else:
+                    # 如果也是 any 就合併進去
+                    l_count.append(0)
+                    l_count.append(ff[i][1] + cnt)
                 cnt = 0
             else:
-                cnt += ff[i-1][1]
+                cnt += ff[i][1]
         seq_count.append(l_count)
+
+    print("seqcount:",len(seq_count[0]))
+    print(seq_count)
     b = time.time()
     print("Find Sequence :", b - a)
 
@@ -508,6 +544,7 @@ if __name__ == "__main__":
             idx += cnt
         tmp.append(column[str_idx][idx:])
         strs.append(tmp)
+
     c = time.time()
     print("Transform :", c - b)
     print(format_regex(strs, subsequence))
