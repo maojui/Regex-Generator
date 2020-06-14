@@ -118,13 +118,12 @@ def string_or(process, string):
             process[idx] = 'e'
     return process
 
-
-def char_string_or(process, string):
-    for idx in range(len(process)):
-        if process[idx] == None:
-            process[idx] = 'f'
+def char_range_on_letter(process, string):
+    data_set = WORD[:-1]
+    for idx, c in enumerate(string):
+        if process[idx] == None and c in data_set:
+            process[idx] = 'c'
     return process
-
 
 __gene = {
     # 跟 Rule 有關的
@@ -142,10 +141,10 @@ __gene = {
     # 跟 value 有關的
     0xa: escape,            # [{}^$.|*+?]    escape
     0xb: symbol,            # [SYMBOLS]      symbol
-    0xc: char_range,        # [?-??-?]        range
+    0xc: char_range,        # [?-??-?]       range
     0xd: char_or,           # [???]          char or
     0xe: string_or,         # (??|???|?)     string or
-    0xf: char_string_or,    # ([???]|[???])  char & string or
+    0xf: char_range_on_letter,    # [?-??-?]       range
 }
 
 
@@ -217,14 +216,6 @@ def space_only_format(strs, cnts):
     return ' '
 
 
-def escape_format(strs, cnts):
-    return f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts)
-
-
-def symbol_format(strs, cnts):
-    return f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts)
-
-
 def char_range_format(strs, cnts):
 
     def getRange(elements, distribute) :
@@ -233,10 +224,8 @@ def char_range_format(strs, cnts):
         for element in elements :
             if element in distribute :
                 idx = distribute.find(element)
-                if _min == None: _min = idx
-                if _max == None: _max = idx
-                if idx < _min: _min = idx
-                if idx > _max: _max = idx
+                if _min == None or idx < _min : _min = idx
+                if _max == None or idx > _max : _max = idx
         if _min != None and _max != None:
             if _min == _max : 
                 output += distribute[_min]
@@ -246,30 +235,37 @@ def char_range_format(strs, cnts):
     
     output = ''
     symbols = ''
-    escape = ''
     elements = set(''.join(strs))
     output += getRange(elements, string.ascii_lowercase)
     output += getRange(elements, string.ascii_uppercase)
     output += getRange(elements, string.digits)
-    for e in elements:
-        if e in SYMBOL and not e in ESCAPE :
-            symbols += e
-        if e in ESCAPE :
-            escape += '\\' + e
     
-    return f"[{output + symbols + escape}]" + freq_counter(cnts)
+    for e in elements:
+        if e in SYMBOL :
+            symbols += e
 
+    return or_format(symbols, freq_counter(cnts), output)
+
+def or_format(output, frequency, rangestr='') :
+    if len(output) > 1 or rangestr != '':
+        return f"[{rangestr + escape_format(output,True)}]" + frequency
+    else :
+        return escape_format(output,False)
+
+def escape_format(str, inside) :
+    tmp = ''
+    for c in str :
+        if inside and c in INESCAPE:
+            tmp += '\\' + c
+        elif not inside and c in ESCAPE :
+            tmp += '\\' + c
+        else :
+            tmp += c
+    return tmp
 
 def char_or_format(strs, cnts):
-    return f"[{''.join(sorted(set(''.join(strs))))}]" + freq_counter(cnts)
-
-
-def char_string_or_format(strs, cnts):
-    ss = []
-    for s in strs:
-        ss.append(f"[{''.join(sorted(set(s)))}]")
-    return f"({'|'.join(set(ss))})" + freq_counter(cnts)
-
+    output = ''.join(sorted(set(''.join(strs))))
+    return or_format(output, freq_counter(cnts))
 
 def string_or_format(strs, cnts):
     setstr = set(strs)
@@ -305,12 +301,12 @@ regex_table = {
 # 處理 value
 formatting = {
     '8': space_only_format,
-    'a': escape_format,
-    'b': symbol_format,
+    'a': char_or_format,
+    'b': char_or_format,
     'c': char_range_format,
     'd': char_or_format,
     'e': string_or_format,
-    'f': char_string_or_format,
+    'f': char_range_format,
 }
 
 

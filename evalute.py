@@ -28,18 +28,19 @@ def fitness(regex, seq, positive, negative=[]):
     for t in positive:
         if not re.search(regex, t):
             print(regex, t)
-            return -1000
+            return -1e9
 
     # 不可以 Match
     for t in negative:
         if re.search(regex, t):
-            return -1000
+            return -1e9
 
     # regex 長度 (-)
     score -= len(regex)
+    
     # or 數量
     if '|' in regex:
-        score -= 10 * (regex.count('|')-3)
+        score -= 50 * (regex.count('|')-3)
 
     # 覆蓋率 (可 generalize 度)
     # 基因分層分數
