@@ -325,7 +325,8 @@ def format_regex(subsequences, subsequence):
         # print("REGEX:" ,tmp)
         if i % 2 == 0 :  # 不一定的
             print(targets, cnts)
-            if len(set(targets)) > 5 : # 有很多不一樣
+            
+            if len(set(targets)) > 3 or random.randint(0,99) % 2 == 1 : # 有很多不一樣
                 _next = '.*'
             elif len(''.join(set(targets))) == 1 :
                 _next = char_range_format(targets, cnts)
