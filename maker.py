@@ -118,7 +118,7 @@ def string_or(process, string):
             process[idx] = 'e'
     return process
 
-def char_range_on_letter(process, string):
+def char_range_letter(process, string):
     data_set = WORD[:-1]
     for idx, c in enumerate(string):
         if process[idx] == None and c in data_set:
@@ -144,7 +144,7 @@ __gene = {
     0xc: char_range,        # [?-??-?]       range for A-Z a-z 0-9 and symbols
     0xd: char_or,           # [???]          char or
     0xe: string_or,         # (??|???|?)     string or
-    0xf: char_range_on_letter,    # [?-??-?]       range for only A-Z a-z 0-9
+    0xf: char_range_letter,    # [?-??-?]       range for only A-Z a-z 0-9
 }
 
 
@@ -243,8 +243,11 @@ def char_range_format(strs, cnts):
     for e in elements:
         if e in SYMBOL :
             symbols += e
-
-    return or_format(symbols, freq_counter(cnts), output)
+    if '-' in output:
+        return or_format(symbols, freq_counter(cnts), output)
+    else :
+        return or_format(output + symbols, freq_counter(cnts))
+        
 
 def or_format(output, frequency, rangestr='') :
     if len(output) > 1 or rangestr != '':
