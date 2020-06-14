@@ -184,56 +184,6 @@ def type_counter(columns):
     return output
 
 
-def find_most_sequence(seq, target, cur=[], inc=0, idx=0):
-    """
-    Recursive 的找出最長的序列，看 test.py
-    """
-    if target == '':
-        return cur, inc
-
-    cur1 = cur.copy()
-    cur2 = cur.copy()
-    loc = -1
-    val = inc
-
-    for i in range(len(seq)):
-        if seq[i][0] == target[0]:
-            loc = i
-            val += seq[i][1]
-            break
-    if loc != -1:
-        # idx += 1
-        idx = idx + loc + 1
-        # Dont take
-        cur1, a = find_most_sequence(seq[loc+1:], target, cur1, inc, idx)
-        # Take it
-        cur2.append(idx)
-        cur2, b = find_most_sequence(seq[loc+1:], target[1:], cur2, val, idx)
-        if a >= b:
-            return cur1, a
-        return cur2, b
-    else:
-        return [], 0
-
-
-def find_sequence(seq, target, cur=[], inc=0, idx=0):
-    cur = []
-    ctr = 0
-    start = 0
-    t_idx = 0
-    while t_idx < len(target):
-        for i in range(start, len(seq)):
-            if seq[i][0] == target[t_idx]:
-                t_idx += 1
-                ctr += seq[i][1]
-                cur.append(i+1)
-                start = i + 1
-                break
-
-    return cur, ctr
-    pass
-
-
 def freq_counter(cnts):
     """
     算 rule 的次數
