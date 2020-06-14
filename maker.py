@@ -322,13 +322,10 @@ def format_regex(subsequences, subsequence):
     for i in range(len(subsequences[0])):
         cnts = np.array([len(seq[i]) for seq in subsequences])
         targets = [seq[i] for seq in subsequences]
-        # print("REGEX:" ,tmp)
         if i % 2 == 0 :  # 不一定的
-            print(targets, cnts)
-            
             if len(set(targets)) > 3 or random.randint(0,99) % 2 == 1 : # 有很多不一樣
                 _next = '.*'
-            elif len(''.join(set(targets))) == 1 :
+            elif len(''.join(set(targets))) == 1 : # 只有幾個不一樣
                 _next = char_range_format(targets, cnts)
             else:
                 _next = f"({'|'.join([t for t in set(targets) if t!= ''])})"
