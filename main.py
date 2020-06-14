@@ -19,6 +19,7 @@ def debug_print(title: str, obj) -> bool:
         print()
     return DEBUG
 
+
 # target = ['ASHIT', 'ASH1P', 'ASHRIMP', "BSHIP"]
 target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
 
@@ -69,8 +70,9 @@ for val in sr.values():
     while i <= GENERATION:
         print(f"{i} Generation :")
         for idx, gene in enumerate(pop):
-            # print(idx, end=" ")
             g_res, fitness = generalizer(val, filtered_set, gene)
+            # debug_print(f"{idx}", gene)
+            # debug_print(f"{fitness}", ''.join(g_res))
             if fitness > MAX_FITNESS:
                 MAX_FITNESS = fitness
                 BEST_GENE = gene

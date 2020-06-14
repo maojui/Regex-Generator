@@ -158,8 +158,7 @@ def encoder(columns, order):
     process = [[None] * len(c) for c in columns]
     for idx, c in enumerate(columns):
         for i in order:
-            if idx==0 and type(None) in map(type,process[idx]):
-                process[idx] = __gene[i](process[idx], c)
+            process[idx] = __gene[i](process[idx], c)
     return process
 
 
@@ -233,45 +232,57 @@ def char_range_format(strs, cnts):
     d_min, d_max = None, None
     symbols = ''
     escape = ''
-    for c in set(''.join(strs)) :
-        if c in string.ascii_lowercase :
+    for c in set(''.join(strs)):
+        if c in string.ascii_lowercase:
             idx = string.ascii_lowercase.find(c)
-            if lc_min == None: lc_min = idx
-            if lc_max == None: lc_max = idx
-            if idx < lc_min: lc_min = idx
-            if idx > lc_max: lc_max = idx
-        if c in string.ascii_uppercase :
+            if lc_min == None:
+                lc_min = idx
+            if lc_max == None:
+                lc_max = idx
+            if idx < lc_min:
+                lc_min = idx
+            if idx > lc_max:
+                lc_max = idx
+        if c in string.ascii_uppercase:
             idx = string.ascii_uppercase.find(c)
-            if uc_min == None: uc__min = idx
-            if uc_max == None: uc__max = idx
-            if idx < uc__min: uc__min = idx
-            if idx > uc__max: uc__max = idx
-        if c in string.digits :
+            if uc_min == None:
+                uc__min = idx
+            if uc_max == None:
+                uc__max = idx
+            if idx < uc__min:
+                uc__min = idx
+            if idx > uc__max:
+                uc__max = idx
+        if c in string.digits:
             idx = string.digits.find(c)
-            if d_min == None: d_min = idx
-            if d_max == None: d_max = idx
-            if idx < d_min: d_min = idx
-            if idx > d_max: d_max = idx
-        if c in SYMBOL and not c in ESCAPE :
+            if d_min == None:
+                d_min = idx
+            if d_max == None:
+                d_max = idx
+            if idx < d_min:
+                d_min = idx
+            if idx > d_max:
+                d_max = idx
+        if c in SYMBOL and not c in ESCAPE:
             symbols += c
-        if c in ESCAPE :
+        if c in ESCAPE:
             escape += '\\' + c
-    
+
     output = ''
     if lc_min != None and lc_max != None:
-        if lc_min == lc_max : 
+        if lc_min == lc_max:
             output += string.ascii_lowercase[lc_min]
-        else :
+        else:
             output += f'{string.ascii_lowercase[lc_min]}-{string.ascii_lowercase[lc_max]}'
     if uc_min != None and uc_max != None:
-        if uc_min == uc_max : 
+        if uc_min == uc_max:
             output += string.ascii_uppercase[uc_min]
-        else :
+        else:
             output += f'{string.ascii_uppercase[uc_min]}-{string.ascii_uppercase[uc_min]}'
-    if d_min != None and d_max != None :
-        if d_min == d_max : 
+    if d_min != None and d_max != None:
+        if d_min == d_max:
             output += string.digits[d_min]
-        else :
+        else:
             output += f'{string.digits[d_min]}-{string.digits[d_max]}'
 
     return f"[{output + symbols + escape}]" + freq_counter(cnts)
@@ -368,27 +379,29 @@ def find_remain(seq, target, cur=[], inc=0, idx=0):
                 break
     return start
 
-def find_good_sequence(seq, target) :
+
+def find_good_sequence(seq, target):
     obj = {}
-    for idx, s in enumerate(seq) :
+    for idx, s in enumerate(seq):
         sym = s[0]
-        if not sym in obj :
+        if not sym in obj:
             obj[sym] = []
-        obj[sym].append((s[1],idx))
+        obj[sym].append((s[1], idx))
     output = []
 
-    lb = -1 #lower bound
-    for i in range(len(target)) :
+    lb = -1  # lower bound
+    for i in range(len(target)):
         sym = target[i]
-        ub = len(seq) - find_remain(seq[::-1],target[i+1:][::-1])
+        ub = len(seq) - find_remain(seq[::-1], target[i+1:][::-1])
         selectable = obj[sym]
         # print("BOUND",lb,'~',ub)
         selectable = list(filter(lambda x: ub > x[1] > lb, selectable))
-        best = sorted(selectable,key=lambda x :-x[0])[0]  
+        best = sorted(selectable, key=lambda x: -x[0])[0]
         lb = best[1]
         output.append(lb)
 
     return output
+
 
 def parser(column, gene):
     """
@@ -401,11 +414,11 @@ def parser(column, gene):
     subsequence = lcs(type_list)
 
     # 轉換完後，如果各位沒有共同的子序列，這段沒有比較的意義，直接退出
-    if subsequence == '' :
+    if subsequence == '':
         return '.*', '9'
 
     seq_count = []
-    for ff in f_columns :
+    for ff in f_columns:
         targets = find_good_sequence(ff, subsequence)
         l_count = []
         cnt = 0
@@ -437,14 +450,17 @@ def parser(column, gene):
 
 
 if __name__ == "__main__":
-    
-    import base64,random,os
-    
-    column = [base64.b64encode(os.urandom(random.randint(i,60))).decode() for i in range(10)]
+
+    import base64
+    import random
+    import os
+
+    column = [base64.b64encode(os.urandom(
+        random.randint(i, 60))).decode() for i in range(10)]
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
     # column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
 
-    order = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
+    order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
     random.shuffle(order)
 
     t_column = encoder(column, order)
@@ -454,15 +470,14 @@ if __name__ == "__main__":
                  for col in f_columns]
     subsequence = lcs(type_list)
 
-    
     print(f_columns)
     print(subsequence)
     import time
 
     seq_count = []
-    a = time.time()    
+    a = time.time()
 
-    for ff in f_columns :
+    for ff in f_columns:
         targets = find_good_sequence(ff, subsequence)
         l_count = []
         cnt = 0
@@ -480,7 +495,7 @@ if __name__ == "__main__":
                 cnt += ff[i][1]
         seq_count.append(l_count)
 
-    print("seqcount:",len(seq_count[0]))
+    print("seqcount:", len(seq_count[0]))
     print(seq_count)
     b = time.time()
     print("Find Sequence :", b - a)
@@ -500,6 +515,5 @@ if __name__ == "__main__":
     print(format_regex(strs, subsequence))
     d = time.time()
     print("Format :", d - c)
-    
 
     # .*[0-9a-f]{1,2}.*[0-9a-f]{1,1}.*\d{6,7}

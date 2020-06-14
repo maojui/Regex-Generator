@@ -10,7 +10,7 @@ def cs_filter(cs_set):
     """
     `cs_set` 是所有字串共有的 substring 的集合。\\
     從 `cs_set` 中拿出有交集的部分，再把比較長 (>平均值) 的那幾個當作固定點
-    
+
     For example: `['ht', 'htt', 'http', 'https', 'abcde'] -> ['https', 'abcde']`
     """
     # 列出可能有用的 set
@@ -151,4 +151,3 @@ if __name__ == "__main__":
         print('Generalize Result:')
         print('\t', ''.join(g_res))
         print('fitness:', fitness)
-
