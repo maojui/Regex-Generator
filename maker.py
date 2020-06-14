@@ -142,7 +142,7 @@ __gene = {
     # 跟 value 有關的
     0xa: escape,            # [{}^$.|*+?]    escape
     0xb: symbol,            # [SYMBOLS]      symbol
-    0xc: char_range,        # [?-?^?]        range
+    0xc: char_range,        # [?-??-?]        range
     0xd: char_or,           # [???]          char or
     0xe: string_or,         # (??|???|?)     string or
     0xf: char_string_or,    # ([???]|[???])  char & string or
@@ -158,7 +158,10 @@ def encoder(columns, order):
     process = [[None] * len(c) for c in columns]
     for idx, c in enumerate(columns):
         for i in order:
+            if idx==0 and type(None) in map(type,process[idx]):
+                print(i, end=' ')
             process[idx] = __gene[i](process[idx], c)
+    print()
     return process
 
 
@@ -454,11 +457,15 @@ def parser(column, gene):
 
 
 if __name__ == "__main__":
+    
+    import base64,random,os
+    
+    column = [base64.b64encode(os.urandom(random.randint(i, 64))).decode() for i in range(10)]
 
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
-    column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
+    # column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
 
-    order = [0xc, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
+    order = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xd, 0xe, 0xf]
     # random.shuffle(order)
 
     t_column = encoder(column, order)
@@ -469,11 +476,16 @@ if __name__ == "__main__":
     subsequence = lcs(type_list)
 
     seq_count = []
+    print(subsequence)
+    import time
+
+    a = time.time()    
     for ff in f_columns:
-        if len(subsequence) < 10:
+        if len(subsequence) < 15:
             targets, cnt = find_most_sequence(ff, subsequence)
         else:
             targets, cnt = find_sequence(ff, subsequence)
+
         l_count = []
         cnt = 0
         for i in range(1, len(ff)+1):
@@ -484,6 +496,8 @@ if __name__ == "__main__":
             else:
                 cnt += ff[i-1][1]
         seq_count.append(l_count)
+    b = time.time()
+    print("Find Sequence :", b - a)
 
     strs = []
     for str_idx, seq_c in enumerate(seq_count):
@@ -494,7 +508,11 @@ if __name__ == "__main__":
             idx += cnt
         tmp.append(column[str_idx][idx:])
         strs.append(tmp)
-
+    c = time.time()
+    print("Transform :", c - b)
     print(format_regex(strs, subsequence))
+    d = time.time()
+    print("Format :", d - c)
+    
 
     # .*[0-9a-f]{1,2}.*[0-9a-f]{1,1}.*\d{6,7}
