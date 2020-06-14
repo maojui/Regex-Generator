@@ -39,8 +39,10 @@ def fitness(regex, seq, positive, negative=[]):
     score -= len(regex)
     
     # or 數量
-    if '|' in regex:
-        score -= 50 * (regex.count('|')-3)
+    if '|' in regex and regex.count('|') < 5:
+        score += 30 
+    else : 
+        score -= 10 *regex.count('|')
 
     # 覆蓋率 (可 generalize 度)
     # 基因分層分數

@@ -127,7 +127,7 @@ def char_range_on_letter(process, string):
 
 __gene = {
     # 跟 Rule 有關的
-    0x0: numbers,           # [0-9]           numbers
+    0x0: numbers,           # \d           numbers
     0x1: upper_alpha,       # [A-Z]           upper alpha
     0x2: lower_alpha,       # [a-z]           lower alpha
     0x3: alpha,             # [A-Za-z]        alpha
@@ -141,10 +141,10 @@ __gene = {
     # 跟 value 有關的
     0xa: escape,            # [{}^$.|*+?]    escape
     0xb: symbol,            # [SYMBOLS]      symbol
-    0xc: char_range,        # [?-??-?]       range
+    0xc: char_range,        # [?-??-?]       range for A-Z a-z 0-9 and symbols
     0xd: char_or,           # [???]          char or
     0xe: string_or,         # (??|???|?)     string or
-    0xf: char_range_on_letter,    # [?-??-?]       range
+    0xf: char_range_on_letter,    # [?-??-?]       range for only A-Z a-z 0-9
 }
 
 
@@ -250,7 +250,7 @@ def or_format(output, frequency, rangestr='') :
     if len(output) > 1 or rangestr != '':
         return f"[{rangestr + escape_format(output,True)}]" + frequency
     else :
-        return escape_format(output,False)
+        return escape_format(output,False) + frequency
 
 def escape_format(str, inside) :
     tmp = ''
@@ -315,14 +315,26 @@ def format_regex(subsequences, subsequence):
     輸出 Regex
     """
     regex = ''
+    tmp = ''
     for i in range(len(subsequences[0])):
-        tmp = ''
         cnts = np.array([len(seq[i]) for seq in subsequences])
         targets = [seq[i] for seq in subsequences]
-        if i % 2 == 0 or tmp == '.':  # 不一定的
-            tmp = '.*'
-            if sum(cnts) == 0 or regex[-2:] == '.*' or regex[-2:] == '.+':
+        # print("REGEX:" ,tmp)
+        if i % 2 == 0 :  # 不一定的
+            print(targets, cnts)
+            if len(set(targets)) > 5 : # 有很多不一樣
+                _next = '.*'
+            elif len(''.join(set(targets))) == 1 :
+                _next = char_range_format(targets, cnts)
+            else:
+                _next = f"({'|'.join([t for t in set(targets) if t!= ''])})"
+                if '' in targets :
+                    _next += '?'
+            if sum(cnts) == 0 or (_next.startswith('.') and tmp.startswith('.')):
                 tmp = ''
+            else :
+                tmp = _next
+            print("REGEX",tmp)
         else:
             typ = regex_table[subsequence[i//2]]
             if typ in '8abcdef':  # 跟 value 有關的
@@ -403,7 +415,7 @@ def parser(column, gene):
             else:
                 cnt += ff[i][1]
         seq_count.append(l_count)
-
+    
     strs = []
     for str_idx, seq_c in enumerate(seq_count):
         idx = 0

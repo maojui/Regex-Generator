@@ -99,6 +99,8 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
         # 其他區塊，另外 Parse，這裡要放基因
         else:
             possible, seq = parser(column, gene)
+            # print('COLUMN', column)
+            # print('POSSIBLE', possible)
             seq = fitness(possible, seq, positive, negative)
             target.append(possible)
             # print(column, "->", possible)
