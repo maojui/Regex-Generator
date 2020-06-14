@@ -36,7 +36,9 @@ def fitness(regex, seq, positive, negative=[]):
             return -1e9
 
     # regex 長度 (-)
-    score -= len(regex)
+    score -= 3 * len(regex)
+    if len(regex) > 100 :
+        score *= 0.9
     
     # or 數量
     if '|' in regex and regex.count('|') < 5:
