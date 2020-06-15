@@ -19,11 +19,29 @@ def common_string(strings):
             if cs_set == None:
                 cs_set = tmp_set
             cs_set = cs_set.intersection(tmp_set)
-
         return cs_set
     else:
         return strings
 
+def cs_compress(cs_set):
+    """
+    @cs_set 是所有字串共有的 substring 的集合。
+    從 @cs_set 中拿出有交集的部分
+    For example: ['ht', 'htt', 'http', 'https', 'abcde'] -> ['https', 'abcde']
+    """
+    # 列出可能有用的 set
+    cs_set = sorted(cs_set, key=lambda x: -len(x))
+    prob = []
+    if len(cs_set) > 0:
+        prob = [cs_set[0]]
+        for cs in cs_set:
+            for p in prob:
+                if cs in p:
+                    break
+            else:
+                prob.append(cs)
+                continue
+    return set(prob)
 
 def _longest_common_subseqence(s1, s2):
     if s1 == '' or s2 == '':
@@ -40,7 +58,6 @@ def _longest_common_subseqence(s1, s2):
                 matrix[i][j] = max(matrix[i - 1][j], matrix[i][j - 1], key=len)
     cs = matrix[-1][-1]
     return cs
-
 
 def longest_common_subseqence(type_list):
     subsequence = type_list[0]

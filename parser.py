@@ -1,76 +1,55 @@
-import string
+import re
 from const import *
 from maker import parser
 from evalute import *
-from utils import common_string
+from utils import common_string, cs_compress
 from itertools import permutations
 
-
 def cs_filter(cs_set):
-    """
-    `cs_set` 是所有字串共有的 substring 的集合。\\
-    從 `cs_set` 中拿出有交集的部分，再把比較長 (>平均值) 的那幾個當作固定點
-
-    For example: `['ht', 'htt', 'http', 'https', 'abcde'] -> ['https', 'abcde']`
-    """
-    # 列出可能有用的 set
-    cs_set = filter(lambda x: len(x) > 5, cs_set)
-    cs_set = sorted(cs_set, key=lambda x: -len(x))
-
-    if len(cs_set) > 0:
-        prob = [cs_set[0]]
-        for cs in cs_set:
-            for p in prob:
-                if cs in p:
-                    break
-            else:
-                prob.append(cs)
-                continue
-
-        avg = round((sum(map(len, prob))/len(prob)))  # ? 怪怪
-
-        def rule(x):
-            return len(x) >= avg or len(x) > 5
-        return filter(rule, prob)
-    else:
-        return []
-
+    length = 1
+    while True :
+        cs_set = set(filter(lambda x : len(x) >= length, cs_set))
+        if len(cs_set) < 10 :
+            break
+        length += 1
+    return cs_set
 
 def split_fixed(strings_set, filtered_set):
     """
     `filtered_set` 是選過適合當固定點的人。\\
     把已知的部分切出來，分區塊處理
     """
-
     # 列出這些固定 substring 所有排列方式
-    filtered_permutation = []
+    cs_permutation = []
     for i in range(len(filtered_set), 0, -1):
-        filtered_permutation.extend(list(permutations(filtered_set, i)))
+        cs_permutation.extend(list(permutations(filtered_set, i)))
 
     # 嘗試各種排列方式
-    splited_result = {}
-    for cutter_point in filtered_permutation:
-        _pass = []
-        for target in strings_set:
-            res = []
-            for idx, ss in enumerate(cutter_point):
-                tmp = target.partition(ss)
-                res.append(tmp[0])
-                if tmp[1] == '':
-                    break
-                res.append(filtered_set.index(ss))
-                target = tmp[2]
-            else:
-                res.append(target)  # 把尾巴加回來
-                _pass.append(res)
-        else:
-            # 砍掉有人不符合的排列方式
-            if len(_pass) == len(strings_set):
-                used = cutter_point
-                splited_result[' & '.join(used)] = _pass
-                return splited_result
-    return {None: [[s] for s in strings_set]}
+    for per in cs_permutation :
+        _const = None
+        reg = f"({'|'.join(per)})"
+        output_set = []
+        for ss in strings_set :
+            const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
+            if _const == None :
+                _const = const # init
+            if _const != None and const != _const :
+                break
 
+            # 把找到的固定點取代成 Index
+            tmp = re.split(reg, ss)
+            output = []
+            for s in tmp :
+                if s in per :
+                    output.append(filtered_set.index(s))
+                else :
+                    output.append(s)
+            output_set.append(output)
+        else :
+            return output_set
+    else :
+        print("---NOTHING FIXED STRING TO SPLIT---")
+        return strings_set
 
 def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
     target = []
@@ -105,6 +84,8 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
             target.append(possible)
             # print(column, "->", possible)
             value += seq
+        
+        print(target)
 
     return target, value
 
@@ -112,44 +93,30 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
 if __name__ == "__main__":
 
     import random
-    # target = ['ASHIT', 'ASH1P', 'ASHRIMP', "BSHIP"]
-
-    # target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
+    target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
 
     gene = [0, 1, 2, 3, 4, 5, 6, 11, 0xe]
     random.shuffle(gene)
 
-    target = [
-        # 'https://blog.csdn.net/vitaminc4/article/details/78922612',
-        # 'https://transbiz.com.tw/regex-regular-expression-ga-%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F/',
-        # 'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
-        # 'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438',
-        'https://tw.xxx.zzds.nctu.edu.tw/mjzjod/assign/view.php?id=85596',
-        'https://kkab.nctu.edu.tw/dcspc/?p=9872',
-        'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596',
-        'https://aadm.nctu.edu.tw/ggmood',
-    ]
-
     cs_set = common_string(target)
-    print("Common string set \t: ")
-    print("\t", list(cs_set))
     # ['PE', 'SH', 'S', 'E', 'H', 'P']
+    cs_set = list(cs_compress(cs_set))
+    # ['PE', 'SH']
+    print("\nCommon string set : \n\t", list(cs_set))
 
-    print()
-    print("Filter set \t\t: ")
+
     filtered_set = list(cs_filter(cs_set))
+    print("\nFilter set : ")
     for i, s in enumerate(filtered_set):
         print(f"\t{i} = {s}")
-    print()
-    print("Split by set\t\t: ")
-    sf = split_fixed(target, filtered_set)
-    print(sf)
-    for k, v in sf.items():
-        print(f"\t{k}")
-        for arr in v:
-            print(f"\t\t{arr} ")
-        g_res, fitness = generalizer(v, filtered_set, gene, target)
-        print(g_res)
-        print('Generalize Result:')
-        print('\t', ''.join(g_res))
-        print('fitness:', fitness)
+
+    split_str = split_fixed(target, filtered_set)
+    print("\nSplit by set : ")
+    for i in range(len(filtered_set)):
+        print(f"\t{target[i]} -> {split_str[i]}")
+
+    g_res, fitness = generalizer(split_str, filtered_set, gene, target)
+    
+    print('Generalize Result:')
+    print('\t', ''.join(g_res))
+    print('fitness:', fitness)
