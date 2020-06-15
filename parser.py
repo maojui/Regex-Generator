@@ -84,8 +84,6 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
             target.append(possible)
             # print(column, "->", possible)
             value += seq
-        
-        print(target)
 
     return target, value
 
@@ -117,6 +115,6 @@ if __name__ == "__main__":
 
     g_res, fitness = generalizer(split_str, filtered_set, gene, target)
     
-    print('Generalize Result:')
+    print('\nGeneralize Result:')
     print('\t', ''.join(g_res))
     print('fitness:', fitness)

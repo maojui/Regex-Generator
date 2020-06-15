@@ -57,8 +57,9 @@ def encoder(columns, order):
     output = []
     process = [[None] * len(c) for c in columns]
     for idx, col in enumerate(columns):
-        for g in order:
+        for g in order :
             process[idx] = substitute(process[idx], col, __gene[g], INDEX_TABLE[g])
+            if not None in process[idx] :break
     return process
 
 if __name__ == "__main__":

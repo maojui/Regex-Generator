@@ -1,11 +1,11 @@
 
 import string
 
-ESCAPE = '{([])^$.|*+?}'
-INESCAPE = '^-'
+ESCAPE = '{([])^$.|*+?}'    # Inside () or Outside
+INB_ESCAPE = '^-'           # Inside []
 DIGIT = string.digits
 UPPER = string.ascii_uppercase
-LOWER = string.ascii_uppercase
+LOWER = string.ascii_lowercase
 LETTERS = string.ascii_letters
 WORD = LETTERS + DIGIT + '_'
 LOWER_HEXDIGIT = DIGIT + LOWER[:6]
