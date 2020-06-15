@@ -4,8 +4,7 @@ import numpy as np
 from encoder import *
 from utils import longest_common_subseqence as lcs
 
-# __all__ = ['parser']
-
+__all__ = ['parser']
 
 def type_counter(columns):
     """
@@ -124,23 +123,23 @@ def string_or_format(strs, cnts):
 
 regex_table = {
     # 跟 Rule 有關的
-    '0x0': '\d',
-    '0x1': '[A-Z]',
-    '0x2': '[a-z]',
-    '0x3': '[A-Za-z]',
-    '0x4': '[0-9A-F]',
-    '0x5': '[0-9a-f]',
-    '0x6': '\w',
-    '0x7': '\s',
-    '0x8': space_only_format,
-    '0x9': '.',
+    INDEX_TABLE[0] : '\d',
+    INDEX_TABLE[1] : '[A-Z]',
+    INDEX_TABLE[2] : '[a-z]',
+    INDEX_TABLE[3] : '[A-Za-z]',
+    INDEX_TABLE[4] : '[0-9A-F]',
+    INDEX_TABLE[5] : '[0-9a-f]',
+    INDEX_TABLE[6] : '\w',
+    INDEX_TABLE[7] : '\s',
+    INDEX_TABLE[8] : space_only_format,
+    INDEX_TABLE[9] : '.',
     # 跟 value 有關的
-    '0xa': char_or_format,
-    '0xb': char_or_format,
-    '0xc': char_range_format,
-    '0xd': char_or_format,
-    '0xe': string_or_format,
-    '0xf': char_range_format,
+    INDEX_TABLE[0xa] : char_or_format,
+    INDEX_TABLE[0xb] : char_or_format,
+    INDEX_TABLE[0xc] : char_range_format,
+    INDEX_TABLE[0xd] : char_or_format,
+    INDEX_TABLE[0xe] : string_or_format,
+    INDEX_TABLE[0xf] : char_range_format,
 }
 
 def format_regex(subsequences, subsequence):
@@ -227,7 +226,6 @@ def parser(column, gene):
     # 轉換完後，如果各位沒有共同的子序列，這段沒有比較的意義，直接退出
     if subsequence == '':
         return '.*', '9'
-
     seq_count = []
     for ff in f_columns:
         targets = find_sequence(ff, subsequence)
@@ -266,8 +264,7 @@ if __name__ == "__main__":
     import random
     import os
 
-    column = [base64.b64encode(os.urandom(
-        random.randint(i, 60))).decode() for i in range(10)]
+    column = [base64.b64encode(os.urandom(random.randint(i, 60))).decode() for i in range(10)]
     # column = ['mjzjod/assign/view.php?id=852596', 'dcspc/?p=9812372', 'mowwwd/assign/view.php?id=851596']
     # column = ['zzne\'w', '$tw', 'k^kab', 'ZZZZ', '0123']
 

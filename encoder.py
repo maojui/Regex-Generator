@@ -2,6 +2,8 @@ import types
 import string
 from const import *
 
+INDEX_TABLE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+='
+
 numbers             = lambda x: x in string.digits
 upper_alpha         = lambda x: x in string.ascii_uppercase
 lower_alpha         = lambda x: x in string.ascii_lowercase
@@ -56,7 +58,7 @@ def encoder(columns, order):
     process = [[None] * len(c) for c in columns]
     for idx, col in enumerate(columns):
         for g in order:
-            process[idx] = substitute(process[idx], col, __gene[g], hex(g))
+            process[idx] = substitute(process[idx], col, __gene[g], INDEX_TABLE[g])
     return process
 
 if __name__ == "__main__":
