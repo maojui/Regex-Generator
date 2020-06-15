@@ -1,170 +1,17 @@
 import random
-import string
 from const import *
 import numpy as np
+from encoder import *
 from utils import longest_common_subseqence as lcs
 
-__all__ = ['parser']
-
-
-def numbers(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "'1234567890":
-            process[idx] = '0'
-    return process
-
-
-def upper_alpha(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "ABCDEFGHIJKLMNOPWRSTUVWXYZ":
-            process[idx] = '1'
-    return process
-
-
-def lower_alpha(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "abcdefghijklmnopqrstuvwxyz":
-            process[idx] = '2'
-    return process
-
-
-def alpha(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPWRSTUVWXYZ":
-            process[idx] = '3'
-    return process
-
-
-def upper_hexdigit(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "0123456789ABCDEF":
-            process[idx] = '4'
-    return process
-
-
-def lower_hexdigit(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in "0123456789abcdef":
-            process[idx] = '5'
-    return process
-
-
-WORD = string.ascii_letters + string.digits + '_'
-
-
-def words(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in WORD:
-            process[idx] = '6'
-    return process
-
-
-SPACE = '\x0c\n\r\t\x0b\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u200a\u2028\u2029\u202f\u205f\u3000\ufeff'
-
-
-def space(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in SPACE:
-            process[idx] = '7'
-    return process
-
-
-def space_only(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c == ' ':
-            process[idx] = '8'
-    return process
-
-
-def anything(process, string):
-    for idx in range(len(process)):
-        if process[idx] == None:
-            process[idx] = '9'
-    return process
-
-
-def escape(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in ESCAPE:
-            process[idx] = 'a'
-    return process
-
-
-def symbol(process, string):
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in SYMBOL:
-            process[idx] = 'b'
-    return process
-
-
-def char_range(process, string):
-    data_set = WORD[:-1]+SYMBOL+ESCAPE
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in data_set:
-            process[idx] = 'c'
-    return process
-
-
-def char_or(process, string):
-    for idx in range(len(process)):
-        if process[idx] == None:
-            process[idx] = 'd'
-    return process
-
-
-def string_or(process, string):
-    for idx in range(len(process)):
-        if process[idx] == None:
-            process[idx] = 'e'
-    return process
-
-def char_range_letter(process, string):
-    data_set = WORD[:-1]
-    for idx, c in enumerate(string):
-        if process[idx] == None and c in data_set:
-            process[idx] = 'c'
-    return process
-
-__gene = {
-    # 跟 Rule 有關的
-    0x0: numbers,           # \d           numbers
-    0x1: upper_alpha,       # [A-Z]           upper alpha
-    0x2: lower_alpha,       # [a-z]           lower alpha
-    0x3: alpha,             # [A-Za-z]        alpha
-    0x4: upper_hexdigit,    # [0-9A-F]        upper hexdigits
-    0x5: lower_hexdigit,    # [0-9a-f]        lower hexdigits
-    0x6: words,             # \w              words
-    0x7: space,             # \s              space like
-    0x8: space_only,        # [ ]             space only
-    0x9: anything,          # .               anything
-
-    # 跟 value 有關的
-    0xa: escape,            # [{}^$.|*+?]    escape
-    0xb: symbol,            # [SYMBOLS]      symbol
-    0xc: char_range,        # [?-??-?]       range for A-Z a-z 0-9 and symbols
-    0xd: char_or,           # [???]          char or
-    0xe: string_or,         # (??|???|?)     string or
-    0xf: char_range_letter,    # [?-??-?]       range for only A-Z a-z 0-9
-}
-
-
-def encoder(columns, order):
-    """
-    把字串重新歸類，照 __gene dictionary 做事。
-    ABC -> 5 5 5
-    """
-    output = []
-    process = [[None] * len(c) for c in columns]
-    for idx, c in enumerate(columns):
-        for i in order:
-            process[idx] = __gene[i](process[idx], c)
-    return process
+# __all__ = ['parser']
 
 
 def type_counter(columns):
     """
     化簡，算數量。
-    [['e', 'e', 'e', 'e', 'e'], ['e', 'e'], ['e', 'e', 'e', 'e']] -> [[('e', 5)], [('e', 2)], [('e', 4)]]
+    [['e', 'e', 'e', 'e', 'e'], ['e', 'e'], ['e', 'e', 'e', 'e']] 
+    => [[('e', 5)], [('e', 2)], [('e', 4)]]
     """
     output = []
     for column in columns:
@@ -208,13 +55,11 @@ def freq_counter(cnts):
         freq = '+'
     return freq
 
-
 def space_only_format(strs, cnts):
     cnt = freq_counter(cnts)
     if len(cnt) != 0:
         return f"[ ]{cnt}"
     return ' '
-
 
 def char_range_format(strs, cnts):
 
@@ -248,7 +93,6 @@ def char_range_format(strs, cnts):
     else :
         return or_format(output + symbols, freq_counter(cnts))
         
-
 def or_format(output, frequency, rangestr='') :
     if len(output) > 1 or rangestr != '':
         return f"[{rangestr + escape_format(output,True)}]" + frequency
@@ -278,40 +122,26 @@ def string_or_format(strs, cnts):
         return list(setstr)[0]
     return ''
 
-
 regex_table = {
     # 跟 Rule 有關的
-    '0': '\d',
-    '1': '[A-Z]',
-    '2': '[a-z]',
-    '3': '[A-Za-z]',
-    '4': '[0-9A-F]',
-    '5': '[0-9a-f]',
-    '6': '\w',
-    '7': '\s',
-    '9': '.',
+    '0x0': '\d',
+    '0x1': '[A-Z]',
+    '0x2': '[a-z]',
+    '0x3': '[A-Za-z]',
+    '0x4': '[0-9A-F]',
+    '0x5': '[0-9a-f]',
+    '0x6': '\w',
+    '0x7': '\s',
+    '0x8': space_only_format,
+    '0x9': '.',
     # 跟 value 有關的
-    '8': '8',
-    'a': 'a',
-    'b': 'b',
-    'c': 'c',
-    'd': 'd',
-    'e': 'e',
-    'f': 'f',
+    '0xa': char_or_format,
+    '0xb': char_or_format,
+    '0xc': char_range_format,
+    '0xd': char_or_format,
+    '0xe': string_or_format,
+    '0xf': char_range_format,
 }
-
-
-# 處理 value
-formatting = {
-    '8': space_only_format,
-    'a': char_or_format,
-    'b': char_or_format,
-    'c': char_range_format,
-    'd': char_or_format,
-    'e': string_or_format,
-    'f': char_range_format,
-}
-
 
 def format_regex(subsequences, subsequence):
     """
@@ -338,14 +168,13 @@ def format_regex(subsequences, subsequence):
             print("REGEX",tmp)
         else:
             typ = regex_table[subsequence[i//2]]
-            if typ in '8abcdef':  # 跟 value 有關的
-                tmp = formatting[typ](targets, cnts)
+            if type(typ) == types.FunctionType :
+                tmp = typ(targets, cnts)
             else:  # 跟 Rule 有關的
                 tmp = typ
                 tmp += freq_counter(cnts)
         regex += tmp
     return regex
-
 
 def find_remain(seq, target, cur=[], inc=0, idx=0):
     cur = []
@@ -361,7 +190,7 @@ def find_remain(seq, target, cur=[], inc=0, idx=0):
     return start
 
 
-def find_good_sequence(seq, target):
+def find_sequence(seq, target):
     obj = {}
     for idx, s in enumerate(seq):
         sym = s[0]
@@ -377,8 +206,9 @@ def find_good_sequence(seq, target):
         selectable = obj[sym]
         # print("BOUND",lb,'~',ub)
         selectable = list(filter(lambda x: ub > x[1] > lb, selectable))
-        best = sorted(selectable, key=lambda x: -x[0])[0]
-        lb = best[1]
+        # best = sorted(selectable, key=lambda x: -x[0])[0]
+        # lb = best[1]
+        lb = random.choice(selectable)[1]
         output.append(lb)
 
     return output
@@ -400,7 +230,7 @@ def parser(column, gene):
 
     seq_count = []
     for ff in f_columns:
-        targets = find_good_sequence(ff, subsequence)
+        targets = find_sequence(ff, subsequence)
         l_count = []
         cnt = 0
         for i in range(0, len(ff)):
@@ -459,7 +289,7 @@ if __name__ == "__main__":
     a = time.time()
 
     for ff in f_columns:
-        targets = find_good_sequence(ff, subsequence)
+        targets = find_sequence(ff, subsequence)
         l_count = []
         cnt = 0
         for i in range(0, len(ff)):
