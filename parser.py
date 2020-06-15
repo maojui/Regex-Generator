@@ -49,7 +49,7 @@ def split_fixed(strings_set, filtered_set):
             return output_set
     else :
         print("---NOTHING FIXED STRING TO SPLIT---")
-        return strings_set
+        return [ [strs] for strs in strings_set]
 
 def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
     target = []

@@ -39,6 +39,7 @@ def fitness(regex, seq, positive, negative=[]):
     score -= 3 * len(regex)
     if len(regex) > 100 :
         score *= 0.9
+        score = int(score)
     
     # or 數量
     if '|' in regex and regex.count('|') < 5:
@@ -51,9 +52,13 @@ def fitness(regex, seq, positive, negative=[]):
     for g in set(seq):
         score -= score_table[g]
 
-    # 單純度 (.*) ENTROPY
+    # 單純度 
     score -= 10 * len(set(seq))
     score -= 10 * len(seq)
+
+    # .* or .+
+    score -= 20 * (regex.count('.*') + regex.count('.+'))
+
 
     return score
 
