@@ -1,5 +1,6 @@
 import unittest
-from utils import common_string, _longest_common_subseqence as _lcs, longest_common_subseqence as lcs
+from utils import cs_compress, common_string
+from utils import _longest_common_subseqence as _lcs, longest_common_subseqence as lcs
 
 class UtilsMethod(unittest.TestCase):
 
@@ -15,6 +16,11 @@ class UtilsMethod(unittest.TestCase):
         self.assertEqual(
             lcs(['121012038513', '125213231', '1212253123']), '121231')
         pass
+
+    # 把比較短的、或已存在的共通字串篩掉
+    def test_cs_compress(self):
+        commons = {'SH', 'PE', 'S', 'E', 'H', 'P'}
+        self.assertEqual(sorted(list(cs_compress(commons))), ['PE', 'SH'])
 
 if __name__ == '__main__':
     unittest.main()
