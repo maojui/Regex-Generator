@@ -98,9 +98,9 @@ def or_format(output, frequency, rangestr='') :
     else :
         return escape_format(output,False) + frequency
 
-def escape_format(str, inside) :
+def escape_format(strs, inside) :
     tmp = ''
-    for c in str :
+    for c in strs :
         if inside and c in INESCAPE:
             tmp += '\\' + c
         elif not inside and c in ESCAPE :
@@ -114,7 +114,10 @@ def char_or_format(strs, cnts):
     return or_format(output, freq_counter(cnts))
 
 def string_or_format(strs, cnts):
-    setstr = set(strs)
+    setstr = set()
+    for ss in strs:
+        if ss == '' : continue
+        setstr.add(escape_format(ss, False))
     if len(setstr) > 1:
         return f"({'|'.join(setstr)})"
     elif len(setstr) == 1:
@@ -157,14 +160,17 @@ def format_regex(subsequences, subsequence):
             elif len(''.join(set(targets))) == 1 : # 只有幾個不一樣
                 _next = char_range_format(targets, cnts)
             else:
-                _next = f"({'|'.join([t for t in set(targets) if t!= ''])})"
+                setstr = set()
+                for ss in targets:
+                    if ss == '' : continue
+                    setstr.add(escape_format(ss, False))
+                _next = f"({'|'.join(setstr)})"
                 if '' in targets :
                     _next += '?'
             if sum(cnts) == 0 or (_next.startswith('.') and tmp.startswith('.')):
                 tmp = ''
             else :
                 tmp = _next
-            print("REGEX",tmp)
         else:
             typ = regex_table[subsequence[i//2]]
             if type(typ) == types.FunctionType :
@@ -188,7 +194,6 @@ def find_remain(seq, target, cur=[], inc=0, idx=0):
                 break
     return start
 
-
 def find_sequence(seq, target):
     obj = {}
     for idx, s in enumerate(seq):
@@ -203,7 +208,6 @@ def find_sequence(seq, target):
         sym = target[i]
         ub = len(seq) - find_remain(seq[::-1], target[i+1:][::-1])
         selectable = obj[sym]
-        # print("BOUND",lb,'~',ub)
         selectable = list(filter(lambda x: ub > x[1] > lb, selectable))
         # best = sorted(selectable, key=lambda x: -x[0])[0]
         # lb = best[1]
@@ -211,7 +215,6 @@ def find_sequence(seq, target):
         output.append(lb)
 
     return output
-
 
 def parser(column, gene):
     """
