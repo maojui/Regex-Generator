@@ -32,9 +32,9 @@ target = [
 #     # 'https://blog.csdn.net/vitaminc4/article/details/78922612',
 #     'https://aadmm.nctu.edu.tw/ggmood',
 #     'https://kakbb.nctu.edu.tw/dcspc/?p=9872',
-#     'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438',
-#     'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
-#     'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596',
+#     # 'https://erqwjeoiqe.nctu.edu.tw/dcspc/?p=3438',
+#     # 'https://AAQQ.nctu.edu.tw/mod/assign/view.php?id=85596',
+#     # 'https://tw.nctu.edu.tw/mjzjod/assign/view.php?id=85596',
 #     'https://e3new.nctu.edu.tw/mowwwd/assign/view.php?id=85596'
 # ]
 
@@ -82,40 +82,40 @@ print()
 
 # Preprocess
 cs_set = common_string(target)
+cs_set = cs_compress(cs_set)
 filtered_set = list(cs_filter(cs_set))
-sr = split_fixed(target, filtered_set)
+split_str = split_fixed(target, filtered_set)
 
 debug_print("common_string", cs_set)
 debug_print("cs_filter", filtered_set)
-debug_print("split_fixed", sr)
+debug_print("split_fixed", split_str)
 
 MAX_FITNESS = -1e9
 BEST_GENE = None
 BEST_REGEX = ""
 
+
+pop = [random.sample([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 16)for _ in range(POPULATION)]
+
+i = 1
 result = []
-for val in sr.values():
-    
-    pop = [random.sample([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 15)for _ in range(POPULATION)]
-    i = 1
+while i <= GENERATION:
 
-    while i <= GENERATION:
+    print(f"{i} Generation :")
+    for idx, gene in enumerate(pop):
+        g_res, fitness = generalizer(split_str, filtered_set, gene)
+        debug_print(f"{idx}", gene)
+        result.append((fitness, ''.join(g_res)))
+        if fitness > MAX_FITNESS:
+            MAX_FITNESS = fitness
+            BEST_GENE = gene
+            BEST_REGEX = ''.join(g_res)
 
-        print(f"{i} Generation :")
-        for idx, gene in enumerate(pop):
-            g_res, fitness = generalizer(val, filtered_set, gene)
-            debug_print(f"{idx}", gene)
-            result.append((fitness, ''.join(g_res)))
-            if fitness > MAX_FITNESS:
-                MAX_FITNESS = fitness
-                BEST_GENE = gene
-                BEST_REGEX = ''.join(g_res)
-
-            pop = []
-            mutate_best = mutation(BEST_GENE)
-            for _ in range(POPULATION):
-                pop.append(crossover(BEST_GENE, mutate_best))
-            i += 1
+    pop = []
+    mutate_best = mutation(BEST_GENE)
+    for _ in range(POPULATION):
+        pop.append(crossover(BEST_GENE, mutate_best))
+    i += 1
 
 
 for fit, regex in  sorted( set(result),key=lambda x : -x[0] ):

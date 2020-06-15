@@ -2,7 +2,7 @@
 import string
 
 ESCAPE = '{([])^$.|*+?}'    # Inside () or Outside
-INB_ESCAPE = '^-'           # Inside []
+INESCAPE = '^-'           # Inside []
 DIGIT = string.digits
 UPPER = string.ascii_uppercase
 LOWER = string.ascii_lowercase
