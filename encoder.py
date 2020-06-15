@@ -5,7 +5,7 @@ from const import *
 numbers             = lambda x: x in string.digits
 upper_alpha         = lambda x: x in string.ascii_uppercase
 lower_alpha         = lambda x: x in string.ascii_lowercase
-alpha               = lambda x: x in string.ascii_uppercase + string.ascii_lowercase
+alpha               = lambda x: x in string.ascii_letters
 upper_hexdigit      = lambda x: x in UPPER_HEXDIGIT
 lower_hexdigit      = lambda x: x in LOWER_HEXDIGIT
 words               = lambda x: x in WORD
@@ -21,7 +21,7 @@ string_or           = lambda x: True
 
 __gene = {
     # 跟 Rule 有關的
-    0x0: numbers,           # \d           numbers
+    0x0: numbers,           # \d              numbers
     0x1: upper_alpha,       # [A-Z]           upper alpha
     0x2: lower_alpha,       # [a-z]           lower alpha
     0x3: alpha,             # [A-Za-z]        alpha
@@ -60,9 +60,8 @@ def encoder(columns, order):
     return process
 
 if __name__ == "__main__":
-    import random
-    target = ['a.* z[/bc','d$89&^)-!@#$%^&*()_+=azxclapIDJF09823ef']
-
-    order = [i for i in range(len(__gene))]
-    random.shuffle(order)
+    
+    target = ['00000','BBBBBB','ccccc']
+    order = [0,1,2,3,4,5,6,7,8,9]
     print(encoder(target,order))
+    # [['0x0', '0x0', '0x0', '0x0', '0x0'], ['0x1', '0x1', '0x1', '0x1', '0x1', '0x1'], ['0x2', '0x2', '0x2', '0x2', '0x2']]
