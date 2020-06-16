@@ -82,7 +82,7 @@ else :
     pop = [random.sample(range(0,0xf), 15) for _ in range(POPULATION)] 
     while GG <= GENERATION:
 
-        print(f"{GG} Generation :")
+        # print(f"{GG} Generation :")
 
         for idx, gene in enumerate(pop):
             g_res, fitness = generalizer(split_str, filtered_set, gene)
