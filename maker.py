@@ -126,41 +126,41 @@ def string_or_format(strs, cnts):
 
 regex_table = {
     # 跟 Rule 有關的
-    INDEX_TABLE[0x0] : '\d',
-    INDEX_TABLE[0x1] : '[A-Z]',
-    INDEX_TABLE[0x2] : '[a-z]',
-    INDEX_TABLE[0x3] : '[A-Za-z]',
-    INDEX_TABLE[0x4] : '[0-9A-F]',
-    INDEX_TABLE[0x5] : '[0-9a-f]',
-    INDEX_TABLE[0x6] : '\w',
-    INDEX_TABLE[0x7] : '\s',
-    INDEX_TABLE[0x8] : space_only_format,
-    INDEX_TABLE[0x9] : '.',
+    INDEX_TABLE(0x0) : '\d',
+    INDEX_TABLE(0x1) : '[A-Z]',
+    INDEX_TABLE(0x2) : '[a-z]',
+    INDEX_TABLE(0x3) : '[A-Za-z]',
+    INDEX_TABLE(0x4) : '[0-9A-F]',
+    INDEX_TABLE(0x5) : '[0-9a-f]',
+    INDEX_TABLE(0x6) : '\w',
+    INDEX_TABLE(0x7) : '\s',
+    INDEX_TABLE(0x8) : space_only_format,
+    INDEX_TABLE(0x9) : '.',
     # 跟 Value 有關的
-    INDEX_TABLE[0xa] : char_or_format,
-    INDEX_TABLE[0xb] : char_or_format,
-    INDEX_TABLE[0xc] : char_range_format,
-    INDEX_TABLE[0xd] : char_or_format,
-    INDEX_TABLE[0xe] : string_or_format,
-    INDEX_TABLE[0xf] : char_range_format,
+    INDEX_TABLE(0xa) : char_or_format,
+    INDEX_TABLE(0xb) : char_or_format,
+    INDEX_TABLE(0xc) : char_range_format,
+    INDEX_TABLE(0xd) : char_or_format,
+    INDEX_TABLE(0xe) : string_or_format,
+    INDEX_TABLE(0xf) : char_range_format,
     # 跟 Rule 有關的
-    INDEX_TABLE[0x10] : '\d',
-    INDEX_TABLE[0x11] : '[A-Z]',
-    INDEX_TABLE[0x12] : '[a-z]',
-    INDEX_TABLE[0x13] : '[A-Za-z]',
-    INDEX_TABLE[0x14] : '[0-9A-F]',
-    INDEX_TABLE[0x15] : '[0-9a-f]',
-    INDEX_TABLE[0x16] : '\w',
-    INDEX_TABLE[0x17] : '\s',
-    INDEX_TABLE[0x18] : space_only_format,
-    INDEX_TABLE[0x19] : '.',
+    INDEX_TABLE(0x80) : '\d',
+    INDEX_TABLE(0x81) : '[A-Z]',
+    INDEX_TABLE(0x82) : '[a-z]',
+    INDEX_TABLE(0x83) : '[A-Za-z]',
+    INDEX_TABLE(0x84) : '[0-9A-F]',
+    INDEX_TABLE(0x85) : '[0-9a-f]',
+    INDEX_TABLE(0x86) : '\w',
+    INDEX_TABLE(0x87) : '\s',
+    INDEX_TABLE(0x88) : space_only_format,
+    INDEX_TABLE(0x89) : '.',
     # 跟 Value 有關的
-    INDEX_TABLE[0x1a] : char_or_format,
-    INDEX_TABLE[0x1b] : char_or_format,
-    INDEX_TABLE[0x1c] : char_range_format,
-    INDEX_TABLE[0x1d] : char_or_format,
-    INDEX_TABLE[0x1e] : string_or_format,
-    INDEX_TABLE[0x1f] : char_range_format,
+    INDEX_TABLE(0x8a) : char_or_format,
+    INDEX_TABLE(0x8b) : char_or_format,
+    INDEX_TABLE(0x8c) : char_range_format,
+    INDEX_TABLE(0x8d) : char_or_format,
+    INDEX_TABLE(0x8e) : string_or_format,
+    INDEX_TABLE(0x8f) : char_range_format,
 }
 
 def format_regex(subsequences, subsequence):
@@ -191,7 +191,7 @@ def format_regex(subsequences, subsequence):
                 tmp = _next
         else:
             typ = regex_table[subsequence[i//2]]
-            if INDEX_TABLE.index(subsequence[i//2]) >= 0x10 :
+            if ord(subsequence[i//2]) >= 0x80 :
                 # print(targets) # Mutation Debug
                 if type(typ) == types.FunctionType :
                     tmp = typ(targets, cnts)
@@ -255,7 +255,7 @@ def transform(column, gene):
 
     # 轉換完後，如果各位沒有共同的子序列，這段沒有比較的意義，直接退出
     if subsequence == '':
-        return '.*', '9'
+        return '.*', INDEX_TABLE(9)
     seq_count = []
     for ff in f_columns:
         targets = find_sequence(ff, subsequence)

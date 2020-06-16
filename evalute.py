@@ -2,22 +2,22 @@ import re
 from const import INDEX_TABLE
 
 score_table = {
-    INDEX_TABLE[0x0] : 10,
-    INDEX_TABLE[0x1] : 26,
-    INDEX_TABLE[0x2] : 26,
-    INDEX_TABLE[0x3] : 52,
-    INDEX_TABLE[0x4] : 16,
-    INDEX_TABLE[0x5] : 16,
-    INDEX_TABLE[0x6] : 72,
-    INDEX_TABLE[0x7] : 5,
-    INDEX_TABLE[0x8] : 1,
-    INDEX_TABLE[0x9] : 100,
-    INDEX_TABLE[0xa] : 20,
-    INDEX_TABLE[0xb] : 20,
-    INDEX_TABLE[0xc] : 100,
-    INDEX_TABLE[0xd] : 100,
-    INDEX_TABLE[0xe] : 100,
-    INDEX_TABLE[0xf] : 100,
+    INDEX_TABLE(0x0) : 10,
+    INDEX_TABLE(0x1) : 26,
+    INDEX_TABLE(0x2) : 26,
+    INDEX_TABLE(0x3) : 52,
+    INDEX_TABLE(0x4) : 16,
+    INDEX_TABLE(0x5) : 16,
+    INDEX_TABLE(0x6) : 72,
+    INDEX_TABLE(0x7) : 5,
+    INDEX_TABLE(0x8) : 1,
+    INDEX_TABLE(0x9) : 100,
+    INDEX_TABLE(0xa) : 20,
+    INDEX_TABLE(0xb) : 20,
+    INDEX_TABLE(0xc) : 100,
+    INDEX_TABLE(0xd) : 100,
+    INDEX_TABLE(0xe) : 100,
+    INDEX_TABLE(0xf) : 100,
 }
 
 
@@ -51,7 +51,7 @@ def fitness(regex, seq, positive, negative=[]):
     # 覆蓋率 (可 generalize 度)
     # 基因分層分數
     for g in set(seq):
-        score -= score_table[INDEX_TABLE[INDEX_TABLE.index(g) & 0xf]]
+        score -= score_table[INDEX_TABLE(ord(g) & 0x7f)]
 
     # 單純度 
     score -= 10 * len(set(seq))

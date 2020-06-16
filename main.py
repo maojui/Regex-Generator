@@ -54,7 +54,6 @@ DEBUG = True
 WARNING = '\033[93m'
 NOCOLOR = '\033[0m'
 
-TARGET = 13
 print()
 print("Target :")
 for t in target:
@@ -82,10 +81,8 @@ else :
     GG = 1
     pop = [random.sample(range(0,0xf), 15) for _ in range(POPULATION)] 
     while GG <= GENERATION:
-        import time
 
         print(f"{GG} Generation :")
-        # time.sleep(0.3)
 
         for idx, gene in enumerate(pop):
             g_res, fitness = generalizer(split_str, filtered_set, gene)
@@ -101,26 +98,21 @@ else :
             p1, p2 = random.sample(pop, k=2)
             
             # clean mutation
-            c1 = [ p&0xf for p in p1] 
-            c2 = [ p&0xf for p in p2]
+            c1 = [ p& 0x7f for p in p1] 
+            c2 = [ p& 0x7f for p in p2]
             
             o1 = crossover(c1, c2)
             o2 = crossover(c2, c1)
             for i in range(len(p1)) :
-                idx1 = o1.index(p1[i]&0xf)
+                idx1 = o1.index(p1[i]& 0x7f)
                 o1[idx1] = p1[i]
-                idx2 = o2.index(p2[i]&0xf)
+                idx2 = o2.index(p2[i]& 0x7f)
                 o2[idx2] = p2[i]
             
             if random.randint(0,100) < 5 : 
-                # time.sleep(0.3)
                 o1 = mutation(o1)
-                # print("MUTATE")
-                # print(o1)
             if random.randint(0,100) < 7 : 
                 o2 = mutation(o2)
-                # print("MUTATE")
-                # print(o2)
             
             offspring.append(o1)
             offspring.append(o2)

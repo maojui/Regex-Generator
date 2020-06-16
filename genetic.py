@@ -3,7 +3,7 @@ import random
 
 def mutation(gene):
     idx = random.choice(range(len(gene)))
-    gene[idx] ^= 0x10
+    gene[idx] ^= 0x80
     return gene
 
 def crossover(p1, p2, mask=None):

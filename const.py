@@ -2,7 +2,7 @@
 import string
 
 DEBUG = False
-INDEX_TABLE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+='
+INDEX_TABLE = lambda x : chr(x)
 
 ESCAPE = '{([])^$.|*+?}'    # Inside () or Outside
 INESCAPE = '^-'           # Inside []

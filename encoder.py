@@ -53,7 +53,7 @@ def substitute_col(process, columns, gene, sym) :
     # Replace those col
     for idx in indices :
         for i in range(len(process)) : 
-            if process[i][idx] != None or not __gene[gene ^ 0x10](columns[i][idx]):
+            if process[i][idx] != None or not __gene[gene ^ 0x80](columns[i][idx]):
                 break
         else :
             for i in range(len(process)) : 
@@ -77,9 +77,9 @@ def encoder(columns, order):
         for gene in order :
             if not None in process[idx] : break
             if gene in __gene  :
-                process[idx] = substitute(process[idx], row, gene, INDEX_TABLE[gene])
+                process[idx] = substitute(process[idx], row, gene, INDEX_TABLE(gene))
             elif idx == 0:
-                process = substitute_col(process, columns, gene, INDEX_TABLE[gene])
+                process = substitute_col(process, columns, gene, INDEX_TABLE(gene))
     return process
 
 if __name__ == "__main__":
