@@ -1,3 +1,12 @@
+from const import DEBUG
+
+def debug_print(title: str, obj) -> bool:
+    if DEBUG:
+        print(f"[{WARNING}DEBUG{NOCOLOR}]", title, ":")
+        print(obj)
+        print()
+    return DEBUG
+
 def common_string(strings):
     """
     Find all common substring of `strings` by DP.

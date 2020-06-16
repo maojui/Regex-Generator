@@ -1,6 +1,9 @@
 
 import string
 
+DEBUG = False
+INDEX_TABLE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+='
+
 ESCAPE = '{([])^$.|*+?}'    # Inside () or Outside
 INESCAPE = '^-'           # Inside []
 DIGIT = string.digits

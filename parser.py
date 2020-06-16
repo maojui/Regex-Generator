@@ -1,8 +1,8 @@
 import re
 from const import *
-from maker import parser
+from maker import transform
 from evalute import *
-from utils import common_string, cs_compress
+from utils import common_string, cs_compress, debug_print
 from itertools import permutations
 
 def cs_filter(cs_set):
@@ -51,6 +51,20 @@ def split_fixed(strings_set, filtered_set):
         print("---NOTHING FIXED STRING TO SPLIT---")
         return [ [strs] for strs in strings_set]
 
+def preprocessor(target):
+
+    cs_set = common_string(target)
+    cs_set = cs_compress(cs_set)
+    filtered_set = list(cs_filter(cs_set))
+    split_str = split_fixed(target, filtered_set)
+
+    # if DEBUG:
+    debug_print("common_string", cs_set)
+    debug_print("cs_filter", filtered_set)
+    debug_print("split_fixed", split_str)
+
+    return split_str, filtered_set
+
 def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
     target = []
     value = 0
@@ -77,44 +91,21 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
 
         # 其他區塊，另外 Parse，這裡要放基因
         else:
-            possible, seq = parser(column, gene)
-            # print('COLUMN', column)
-            # print('POSSIBLE', possible)
+            possible, seq = transform(column, gene)
             seq = fitness(possible, seq, positive, negative)
             target.append(possible)
-            # print(column, "->", possible)
             value += seq
 
     return target, value
 
-
 if __name__ == "__main__":
 
     import random
-    target = ['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"]
-
-    gene = [0, 1, 2, 3, 4, 5, 6, 11, 0xe]
-    random.shuffle(gene)
-
-    cs_set = common_string(target)
-    # ['PE', 'SH', 'S', 'E', 'H', 'P']
-    cs_set = list(cs_compress(cs_set))
-    # ['PE', 'SH']
-    print("\nCommon string set : \n\t", list(cs_set))
-
-
-    filtered_set = list(cs_filter(cs_set))
-    print("\nFilter set : ")
-    for i, s in enumerate(filtered_set):
-        print(f"\t{i} = {s}")
-
-    split_str = split_fixed(target, filtered_set)
-    print("\nSplit by set : ")
-    for i in range(len(filtered_set)):
-        print(f"\t{target[i]} -> {split_str[i]}")
-
+    target = ['ASHIAAA', 'ASH1PGB', 'ASHRIMPDC', "BSHIKED"]
+    gene = [0x11, 9]
+    # random.shuffle(gene)
+    split_str, filtered_set = preprocessor(target)
     g_res, fitness = generalizer(split_str, filtered_set, gene, target)
-    
     print('\nGeneralize Result:')
     print('\t', ''.join(g_res))
     print('fitness:', fitness)
