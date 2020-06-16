@@ -1,9 +1,10 @@
 import random
 
 
-def mutation(p):
-    return p[::-1]
-
+def mutation(gene):
+    idx = random.choice(range(len(gene)))
+    gene[idx] ^= 0x10
+    return gene
 
 def crossover(p1, p2, mask=None):
     """

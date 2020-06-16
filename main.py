@@ -48,17 +48,11 @@ import sys
 target = testset[int(sys.argv[1])]
 
 POPULATION = 100
-GENERATION = 3
+GENERATION = 20
 
 DEBUG = True
 WARNING = '\033[93m'
 NOCOLOR = '\033[0m'
-def debug_print(title: str, obj) -> bool:
-    if DEBUG:
-        print(f"[{WARNING}DEBUG{NOCOLOR}]", title, ":")
-        print(obj)
-        print()
-    return DEBUG
 
 TARGET = 13
 print()
@@ -68,14 +62,6 @@ for t in target:
 print()
 
 # Preprocess
-cs_set = common_string(target)
-cs_set = cs_compress(cs_set)
-filtered_set = list(cs_filter(cs_set))
-split_str = split_fixed(target, filtered_set)
-
-debug_print("common_string", cs_set)
-debug_print("cs_filter", filtered_set)
-debug_print("split_fixed", split_str)
 
 MAX_FITNESS = -1e9
 BEST_GENE = None
@@ -84,19 +70,22 @@ BEST_REGEX = ""
 result = []
 TEST = False
 if TEST :
-
-    gene = [15,9]
+                       # [ 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v']
+    gene = random.sample([0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f], 16)+ [9]
     g_res, fitness = generalizer(split_str, filtered_set, gene)
     result.append((fitness, ''.join(g_res)))
 
 
 else :
 
-    i = 1
-    pop = [random.sample([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 16)for _ in range(POPULATION)]
-    while i <= GENERATION:
+    GG = 1
+    pop = [random.sample(range(0,0xf), 15) for _ in range(POPULATION)] 
+    while GG <= GENERATION:
+        import time
 
-        print(f"{i} Generation :")
+        print(f"{GG} Generation :")
+        # time.sleep(0.3)
+
         for idx, gene in enumerate(pop):
             g_res, fitness = generalizer(split_str, filtered_set, gene)
             debug_print(f"{idx}", gene)
@@ -106,15 +95,40 @@ else :
                 BEST_GENE = gene
                 BEST_REGEX = ''.join(g_res)
 
-        pop = []
-        mutate_best = mutation(BEST_GENE)
-        for _ in range(POPULATION):
-            pop.append(crossover(BEST_GENE, mutate_best))
-        i += 1
+        offspring = []
+        for _ in range(POPULATION//2):
+            p1, p2 = random.sample(pop, k=2)
+            
+            # clean mutation
+            c1 = [ p&0xf for p in p1] 
+            c2 = [ p&0xf for p in p2]
+            
+            o1 = crossover(c1, c2)
+            o2 = crossover(c2, c1)
+            for i in range(len(p1)) :
+                idx1 = o1.index(p1[i]&0xf)
+                o1[idx1] = p1[i]
+                idx2 = o2.index(p2[i]&0xf)
+                o2[idx2] = p2[i]
+            
+            if random.randint(0,100) < 5 : 
+                # time.sleep(0.3)
+                o1 = mutation(o1)
+                # print("MUTATE")
+                # print(o1)
+            if random.randint(0,100) < 7 : 
+                o2 = mutation(o2)
+                # print("MUTATE")
+                # print(o2)
+            
+            offspring.append(o1)
+            offspring.append(o2)
+
+        pop = offspring
+        GG += 1
 
 
 for fit, regex in  sorted( set(result),key=lambda x : -x[0] ):
     print(f'{fit}\t\t{regex}')
 
-print(len(set(result)))
 # print(f"\t{MAX_FITNESS} : {BEST_REGEX}")

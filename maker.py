@@ -4,7 +4,7 @@ import numpy as np
 from encoder import *
 from utils import longest_common_subseqence as lcs
 
-__all__ = ['parser']
+__all__ = ['transform']
 
 def type_counter(columns):
     """
@@ -126,23 +126,41 @@ def string_or_format(strs, cnts):
 
 regex_table = {
     # 跟 Rule 有關的
-    INDEX_TABLE[0] : '\d',
-    INDEX_TABLE[1] : '[A-Z]',
-    INDEX_TABLE[2] : '[a-z]',
-    INDEX_TABLE[3] : '[A-Za-z]',
-    INDEX_TABLE[4] : '[0-9A-F]',
-    INDEX_TABLE[5] : '[0-9a-f]',
-    INDEX_TABLE[6] : '\w',
-    INDEX_TABLE[7] : '\s',
-    INDEX_TABLE[8] : space_only_format,
-    INDEX_TABLE[9] : '.',
-    # 跟 value 有關的
+    INDEX_TABLE[0x0] : '\d',
+    INDEX_TABLE[0x1] : '[A-Z]',
+    INDEX_TABLE[0x2] : '[a-z]',
+    INDEX_TABLE[0x3] : '[A-Za-z]',
+    INDEX_TABLE[0x4] : '[0-9A-F]',
+    INDEX_TABLE[0x5] : '[0-9a-f]',
+    INDEX_TABLE[0x6] : '\w',
+    INDEX_TABLE[0x7] : '\s',
+    INDEX_TABLE[0x8] : space_only_format,
+    INDEX_TABLE[0x9] : '.',
+    # 跟 Value 有關的
     INDEX_TABLE[0xa] : char_or_format,
     INDEX_TABLE[0xb] : char_or_format,
     INDEX_TABLE[0xc] : char_range_format,
     INDEX_TABLE[0xd] : char_or_format,
     INDEX_TABLE[0xe] : string_or_format,
     INDEX_TABLE[0xf] : char_range_format,
+    # 跟 Rule 有關的
+    INDEX_TABLE[0x10] : '\d',
+    INDEX_TABLE[0x11] : '[A-Z]',
+    INDEX_TABLE[0x12] : '[a-z]',
+    INDEX_TABLE[0x13] : '[A-Za-z]',
+    INDEX_TABLE[0x14] : '[0-9A-F]',
+    INDEX_TABLE[0x15] : '[0-9a-f]',
+    INDEX_TABLE[0x16] : '\w',
+    INDEX_TABLE[0x17] : '\s',
+    INDEX_TABLE[0x18] : space_only_format,
+    INDEX_TABLE[0x19] : '.',
+    # 跟 Value 有關的
+    INDEX_TABLE[0x1a] : char_or_format,
+    INDEX_TABLE[0x1b] : char_or_format,
+    INDEX_TABLE[0x1c] : char_range_format,
+    INDEX_TABLE[0x1d] : char_or_format,
+    INDEX_TABLE[0x1e] : string_or_format,
+    INDEX_TABLE[0x1f] : char_range_format,
 }
 
 def format_regex(subsequences, subsequence):
@@ -173,11 +191,20 @@ def format_regex(subsequences, subsequence):
                 tmp = _next
         else:
             typ = regex_table[subsequence[i//2]]
-            if type(typ) == types.FunctionType :
-                tmp = typ(targets, cnts)
-            else:  # 跟 Rule 有關的
-                tmp = typ
-                tmp += freq_counter(cnts)
+            if INDEX_TABLE.index(subsequence[i//2]) >= 0x10 :
+                print(targets)
+                if type(typ) == types.FunctionType :
+                    tmp = typ(targets, cnts)
+                else: 
+                    tmp = typ
+                    tmp += freq_counter(cnts)
+                print(tmp)
+            else:   
+                if type(typ) == types.FunctionType :
+                    tmp = typ(targets, cnts)
+                else : 
+                    tmp = typ
+                    tmp += freq_counter(cnts)
         regex += tmp
     return regex
 
@@ -216,7 +243,7 @@ def find_sequence(seq, target):
 
     return output
 
-def parser(column, gene):
+def transform(column, gene):
     """
     全部搞在一起
     """
