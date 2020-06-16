@@ -143,24 +143,6 @@ regex_table = {
     INDEX_TABLE(0xd) : char_or_format,
     INDEX_TABLE(0xe) : string_or_format,
     INDEX_TABLE(0xf) : char_range_format,
-    # 跟 Rule 有關的
-    INDEX_TABLE(0x80) : '\d',
-    INDEX_TABLE(0x81) : '[A-Z]',
-    INDEX_TABLE(0x82) : '[a-z]',
-    INDEX_TABLE(0x83) : '[A-Za-z]',
-    INDEX_TABLE(0x84) : '[0-9A-F]',
-    INDEX_TABLE(0x85) : '[0-9a-f]',
-    INDEX_TABLE(0x86) : '\w',
-    INDEX_TABLE(0x87) : '\s',
-    INDEX_TABLE(0x88) : space_only_format,
-    INDEX_TABLE(0x89) : '.',
-    # 跟 Value 有關的
-    INDEX_TABLE(0x8a) : char_or_format,
-    INDEX_TABLE(0x8b) : char_or_format,
-    INDEX_TABLE(0x8c) : char_range_format,
-    INDEX_TABLE(0x8d) : char_or_format,
-    INDEX_TABLE(0x8e) : string_or_format,
-    INDEX_TABLE(0x8f) : char_range_format,
 }
 
 def format_regex(subsequences, subsequence):
@@ -190,7 +172,7 @@ def format_regex(subsequences, subsequence):
             else :
                 tmp = _next
         else:
-            typ = regex_table[subsequence[i//2]]
+            typ = regex_table[chr(ord(subsequence[i//2]) & 0x7f)]
             if ord(subsequence[i//2]) >= 0x80 :
                 # print(targets) # Mutation Debug
                 if type(typ) == types.FunctionType :

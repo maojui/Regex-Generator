@@ -3,7 +3,7 @@ from const import *
 from maker import transform
 from evalute import *
 from utils import common_string, cs_compress, debug_print
-from itertools import permutations
+from itertools import combinations
 
 def cs_filter(cs_set):
     length = 1
@@ -20,12 +20,12 @@ def split_fixed(strings_set, filtered_set):
     把已知的部分切出來，分區塊處理
     """
     # 列出這些固定 substring 所有排列方式
-    cs_permutation = []
+    cs_combination = []
     for i in range(len(filtered_set), 0, -1):
-        cs_permutation.extend(list(permutations(filtered_set, i)))
+        cs_combination.extend(list(combinations(filtered_set, i)))
 
     # 嘗試各種排列方式
-    for per in cs_permutation :
+    for per in cs_combination :
         _const = None
         reg = f"({'|'.join(per)})"
         output_set = []

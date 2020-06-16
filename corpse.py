@@ -120,11 +120,11 @@ def alg1(cs_set):
 test = list(alg1(test))  # ['abc', 'def', 'ghi']
 
 # ['abc', 'def', 'ghi']
-from itertools import permutations
+from itertools import combinations
 def alg2(cs_set):
     filtered_permutation = []
     for i in range(len(cs_set), 0, -1):
-        filtered_permutation.extend(list(permutations(cs_set, i)))
+        filtered_permutation.extend(list(combinations(cs_set, i)))
     return filtered_permutation
 
 test = alg2(test)
