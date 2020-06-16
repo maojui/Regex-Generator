@@ -62,6 +62,7 @@ for t in target:
 print()
 
 # Preprocess
+split_str, filtered_set = preprocessor(target)
 
 MAX_FITNESS = -1e9
 BEST_GENE = None

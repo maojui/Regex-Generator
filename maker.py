@@ -192,13 +192,13 @@ def format_regex(subsequences, subsequence):
         else:
             typ = regex_table[subsequence[i//2]]
             if INDEX_TABLE.index(subsequence[i//2]) >= 0x10 :
-                print(targets)
+                # print(targets) # Mutation Debug
                 if type(typ) == types.FunctionType :
                     tmp = typ(targets, cnts)
                 else: 
                     tmp = typ
                     tmp += freq_counter(cnts)
-                print(tmp)
+                # print(tmp)
             else:   
                 if type(typ) == types.FunctionType :
                     tmp = typ(targets, cnts)
