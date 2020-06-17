@@ -1,6 +1,6 @@
 import re
 from const import *
-from maker import transform
+from decoder import transform_column
 from evalute import *
 from utils import common_string, cs_compress, debug_print
 from itertools import combinations
@@ -65,15 +65,16 @@ def preprocessor(target):
 
     return split_str, filtered_set
 
-def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
-    target = []
+def parser(targets, gene, positive=[], negative=[]):
+    output = []
     value = 0
+    arr, filtered_set = preprocessor(targets)
     for i in range(len(arr[0])):
         column = [val[i] for val in arr]
 
         # 如果大家開頭都沒東西
         if i == 0 and len(''.join(column)) == 0:
-            target.append('^')
+            output.append('^')
 
         # 如果那列是有對應的 Common string
         elif type(column[0]) == int:
@@ -83,29 +84,29 @@ def generalizer(arr, filtered_set, gene, positive=[], negative=[]):
                     s += "\\" + c
                 else:
                     s += c
-            target.append(s)
+            output.append(s)
 
         # 如果大家在最後面都沒東西
         elif i == len(arr[0])-1 and len(''.join(column)) == 0:
-            target.append('$')
+            output.append('$')
 
         # 其他區塊，另外 Parse，這裡要放基因
         else:
-            possible, seq = transform(column, gene)
+            possible, seq = transform_column(column, gene)
             seq = fitness(possible, seq, positive, negative)
-            target.append(possible)
+            output.append(possible)
             value += seq
 
-    return target, value
+    return output, value
 
 if __name__ == "__main__":
 
     import random
-    target = ['ASHIAAA', 'ASH1PGB', 'ASHRIMPDC', "BSHIKED"]
+    output = ['ASHIAAA', 'ASH1PGB', 'ASHRIMPDC', "BSHIKED"]
     gene = [0x11, 9]
     # random.shuffle(gene)
-    split_str, filtered_set = preprocessor(target)
-    g_res, fitness = generalizer(split_str, filtered_set, gene, target)
+    split_str, filtered_set = preprocessor(output)
+    g_res, fitness = parser(split_str, filtered_set, gene, output)
     print('\nGeneralize Result:')
     print('\t', ''.join(g_res))
     print('fitness:', fitness)
