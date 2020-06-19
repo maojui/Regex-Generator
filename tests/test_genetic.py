@@ -4,7 +4,7 @@ import unittest
 from genetic import *
 
 
-class EncoderMethod(unittest.TestCase):
+class GeneticMethod(unittest.TestCase):
 
     def getRandomTarget(self, strings):
         return [''.join(random.sample(strings, k=random.randint(0,len(strings)))) for i in range(random.randint(10,30))]

@@ -23,7 +23,7 @@ anything                = lambda x: True
 char_or                 = lambda x: True
 string_or               = lambda x: True
 
-__gene = {
+genotype = {
     0x00 : numbers,                 # \d                            numbers
     0x01 : upper_alpha,             # [A-Z]                         upper alpha
     0x02 : lower_alpha,             # [a-z]                         lower alpha
@@ -59,7 +59,7 @@ def substitute_col(process, columns, gene, sym) :
     # Replace those col
     for idx in indices :
         for i in range(len(process)) : 
-            if process[i][idx] != None or not __gene[gene ^ 0x80](columns[i][idx]):
+            if process[i][idx] != None or not genotype[gene ^ 0x80](columns[i][idx]):
                 break
         else :
             for i in range(len(process)) : 
@@ -68,13 +68,13 @@ def substitute_col(process, columns, gene, sym) :
 
 def substitute(process, string, gene, sym):
     for idx, c in enumerate(string):
-        if process[idx] == None and __gene[gene](c):
+        if process[idx] == None and genotype[gene](c):
             process[idx] = sym
     return process
 
 def encoder(columns, order):
     """
-    把字串重新歸類，照 __gene dictionary 做事。
+    把字串重新歸類，照 genotype dictionary 做事。
     ABC -> 5 5 5
     """
     output = []
@@ -82,7 +82,7 @@ def encoder(columns, order):
     for idx, row in enumerate(columns):
         for gene in order :
             if not None in process[idx] : break
-            if gene in __gene  :
+            if gene in genotype  :
                 process[idx] = substitute(process[idx], row, gene, INDEX_TABLE(gene))
             elif idx == 0:
                 process = substitute_col(process, columns, gene, INDEX_TABLE(gene))
@@ -122,6 +122,41 @@ def crossover(p1, p2, mask=None):
         if gene[idx] == None:
             gene[idx] = p2[idx]
     return gene
+
+def nextGeneration(population, prob):
+    offspring = []
+    for _ in range(len(population)//2):
+        
+        p1, p2 = random.choices(population, weights=prob, k=2)
+        
+        # clean mutation
+        c1 = [ p& 0x7f for p in p1] 
+        c2 = [ p& 0x7f for p in p2]
+        
+        if random.randint(0,100) < 30 : 
+            o1 = crossover(c1, c2)
+            for i in range(len(p1)) :
+                idx1 = o1.index(p1[i]& 0x7f)
+                o1[idx1] = p1[i]
+        else :
+            o1 = p1
+        
+        if random.randint(0,100) < 30 : 
+            o2 = crossover(c2, c1)
+            for i in range(len(p1)) :
+                idx2 = o2.index(p2[i]& 0x7f)
+                o2[idx2] = p2[i]
+        else :
+            o2 = p2
+            
+        if random.randint(0,100) < 5 : 
+            o1 = mutation(o1)
+        if random.randint(0,100) < 7 : 
+            o2 = mutation(o2)
+        
+        offspring.append(o1)
+        offspring.append(o2)
+    return offspring
 
 
 if __name__ == "__main__":
