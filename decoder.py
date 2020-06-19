@@ -1,7 +1,6 @@
 import random
 import types
 from const import *
-import numpy as np
 from genetic import encoder
 from formatter import *
 from utils import longest_common_subseqence as lcs
@@ -76,7 +75,7 @@ def decoder(subsequences, subsequence):
     regex = ''
     tmp = ''
     for i in range(len(subsequences[0])):
-        cnts = np.array([len(seq[i]) for seq in subsequences])
+        cnts = [len(seq[i]) for seq in subsequences]
         targets = [seq[i] for seq in subsequences]
         if i % 2 == 0 :  # 不一定的
             if len(set(targets)) > 3 or random.randint(0,99) % 2 == 1 : # 有很多不一樣

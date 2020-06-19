@@ -1,5 +1,4 @@
 from const import *
-import numpy as np 
 import random
 
 def type_counter(columns):
@@ -27,10 +26,8 @@ def freq_counter(cnts):
     """
     算 rule 的次數
     """
-    std = np.std(cnts)
-    avg = np.mean(cnts)
-    _min = np.min(cnts)
-    _max = np.max(cnts)
+    _min = min(cnts)
+    _max = max(cnts)
     freq = ''
     if _min == 0 and _max == 1:  # 只有一個
         freq = '?'
