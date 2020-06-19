@@ -7,7 +7,7 @@ python:
     - "3.8-dev" 
 
 install:
-- pip install requirements
+- pip install -r requirements
 
 script:
 - python -m pytest
