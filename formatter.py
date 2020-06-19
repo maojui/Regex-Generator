@@ -88,23 +88,26 @@ def char_range_format(strs, cnts):
         return or_format(output + symbols, freq_counter(cnts))
 
 def col_char_range_format(strs, cnts):
-    reg = ''
+    reg = []
+    rtl = random.randint(0,1) == 0 # parse direction from right to left.
     for i in range(max(cnts)) :
         col = []
         col_cnt = []
         for idx, s in enumerate(strs) :
+            s = s[::-1] if rtl else s
             col.append(s[i:i+1])
             col_cnt.append(len(s[i:i+1]))
-        reg += char_or_format(col, col_cnt)
-    return reg
+        reg.append(char_range_format(col, col_cnt))
+    reg = reg[::-1] if rtl else reg
+    return ''.join(reg)
 
 def or_format(output, frequency, rangestr='') :
     if len(output) > 1 or rangestr != '':
         return f"[{rangestr + escape_format(output,True)}]" + frequency
     else :
-        return escape_format(output,False) + frequency
+        return escape_format(output) + frequency
 
-def escape_format(strs, inside) :
+def escape_format(strs, inside=False) :
     tmp = ''
     for c in strs :
         if inside and c in INESCAPE:
@@ -123,7 +126,7 @@ def string_or_format(strs, cnts):
     setstr = set()
     for ss in strs:
         if ss == '' : continue
-        setstr.add(escape_format(ss, False))
+        setstr.add(escape_format(ss))
     if len(setstr) > 1:
         return f"({'|'.join(setstr)})"
     elif len(setstr) == 1:

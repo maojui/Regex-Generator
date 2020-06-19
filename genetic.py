@@ -24,29 +24,27 @@ char_or                 = lambda x: True
 string_or               = lambda x: True
 
 __gene = {
-    # 跟 Rule 有關的
-    0x00 : numbers,           # \d              numbers
-    0x01 : upper_alpha,       # [A-Z]           upper alpha
-    0x02 : lower_alpha,       # [a-z]           lower alpha
-    0x03 : alpha,             # [A-Za-z]        alpha
-    0x04 : upper_hexdigit,    # [0-9A-F]        upper hexdigits
-    0x05 : lower_hexdigit,    # [0-9a-f]        lower hexdigits
-    0x06 : words,             # \w              words
-    0x07 : space,             # \s              space like
-    0x08 : space_only,        # [ ]             space only
-    0x09 : anything,          # .               anything
-    # 跟 value 有關的
-    0x0a : escape,            # [{}^$.|*+?]    escape
-    0x0b : symbol,            # [SYMBOLS]      symbol
-    0x0c : char_range,        # [?-??-?]       range for A-Z a-z 0-9 and symbols
-    0x0d : char_range_letter, # [?-??-?]       range for only A-Z a-z 0-9
-    0x0e : char_or,           # [???]          char or
-    0x0f : string_or,         # (??|???|?)     string or
-    0x10 : char_range_col,        
-    0x11 : char_range_letter_col, 
-    0x12 : char_range_digit_col, 
-    0x13 : char_range_upper_col, 
-    0x14 : char_range_lower_col, 
+    0x00 : numbers,                 # \d                            numbers
+    0x01 : upper_alpha,             # [A-Z]                         upper alpha
+    0x02 : lower_alpha,             # [a-z]                         lower alpha
+    0x03 : alpha,                   # [A-Za-z]                      alpha
+    0x04 : upper_hexdigit,          # [0-9A-F]                      upper hexdigits
+    0x05 : lower_hexdigit,          # [0-9a-f]                      lower hexdigits
+    0x06 : words,                   # \w                            words
+    0x07 : space,                   # \s                            space like
+    0x08 : space_only,              # [ ]                           space only
+    0x09 : anything,                # .                             anything
+    0x0a : escape,                  # [{}^$.|*+?]                   escape
+    0x0b : symbol,                  # [SYMBOLS]                     symbol
+    0x0c : char_range,              # [?-??-?]                      range for A-Z a-z 0-9 and symbols
+    0x0d : char_range_letter,       # [?-??-?]                      range for only A-Z a-z 0-9
+    0x0e : char_or,                 # [???]                         char or
+    0x0f : string_or,               # (??|???|?)                    string or
+    0x10 : char_range_col,          # [?-??-?][?-??-?][?-??-?]?     This gene parse letter & symbol column by column
+    0x11 : char_range_letter_col,   # [?-??-?][?-??-?][?-??-?]?     This gene parse letter column by column
+    0x12 : char_range_digit_col,    # [?-?][?-?][?-?]?              This gene parse digit column by column
+    0x13 : char_range_upper_col,    # [?-?][?-?][?-?]?              This gene parse upper column by column
+    0x14 : char_range_lower_col,    # [?-?][?-?][?-?]?              This gene parse lower column by column
 }
 
 def substitute_col(process, columns, gene, sym) :

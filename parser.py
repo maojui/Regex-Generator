@@ -2,6 +2,7 @@ import re
 from const import *
 from decoder import transform_column
 from evalute import *
+from utils import escape
 from utils import common_string, cs_compress, debug_print
 from itertools import combinations
 
@@ -27,7 +28,7 @@ def split_fixed(strings_set, filtered_set):
     # 嘗試各種排列方式
     for per in cs_combination :
         _const = None
-        reg = f"({'|'.join(per)})"
+        reg = f"({'|'.join([escape(p) for p in per])})"
         output_set = []
         for ss in strings_set :
             const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
@@ -78,13 +79,7 @@ def parser(targets, gene, positive=[], negative=[]):
 
         # 如果那列是有對應的 Common string
         elif type(column[0]) == int:
-            s = ''
-            for c in list(filtered_set[column[0]]):
-                if c in ESCAPE:
-                    s += "\\" + c
-                else:
-                    s += c
-            output.append(s)
+            output.append(escape(filtered_set[column[0]]))
 
         # 如果大家在最後面都沒東西
         elif i == len(arr[0])-1 and len(''.join(column)) == 0:

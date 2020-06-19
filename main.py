@@ -65,19 +65,19 @@ BEST_REGEX = ""
 
 result = []
 
-TEST = True
+TEST = False
 
 if TEST :
 
     # gene = random.sample(range(0,0xf), 15)
-    gene = random.sample([0x11,0x9], 2)
+    gene = [0x12,0x9]
     g_res, fitness = parser(target, gene)
     result.append((fitness, ''.join(g_res)))
 
 else :
 
     GG = 1
-    pop = [random.sample(range(0,0xf), 15) for _ in range(POPULATION)] 
+    pop = [random.sample(range(0,0x15), 0x15) for _ in range(POPULATION)] 
     # pop = [[0,5,2,9] for _ in range(POPULATION)] 
     while GG <= GENERATION:
         

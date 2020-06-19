@@ -22,11 +22,14 @@ regex_table = {
     INDEX_TABLE(0x0a) : char_or_format,
     INDEX_TABLE(0x0b) : char_or_format,
     INDEX_TABLE(0x0c) : char_range_format,
-    INDEX_TABLE(0x0d) : char_or_format,
+    INDEX_TABLE(0x0d) : char_range_format,
     INDEX_TABLE(0x0e) : string_or_format,
     INDEX_TABLE(0x0f) : char_range_format,
     INDEX_TABLE(0x10) : col_char_range_format,
     INDEX_TABLE(0x11) : col_char_range_format,
+    INDEX_TABLE(0x12) : col_char_range_format,
+    INDEX_TABLE(0x13) : col_char_range_format,
+    INDEX_TABLE(0x14) : col_char_range_format,
 }
 
 def find_sequence(seq, target):
