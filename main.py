@@ -49,12 +49,8 @@ target = testset[int(sys.argv[1])]
 POPULATION = 100
 GENERATION = 20
 
-print()
-print("Target :")
-for t in target:
-    print('\t', t)
-print()
-
+print("\nTarget :\n\t", end='')
+print('\n\t'.join(target), end='\n\n')
 
 result = []
 
