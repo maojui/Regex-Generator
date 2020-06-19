@@ -1,5 +1,5 @@
 # Regex-Generator
-![https://travis-ci.com/maojui/Regex-Generator.svg?branch=master]
+[![Build Status](https://travis-ci.com/maojui/Regex-Generator.svg?branch=master)](https://travis-ci.com/maojui/Regex-Generator)
 
 # slide
 
