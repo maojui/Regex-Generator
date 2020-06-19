@@ -1,7 +1,7 @@
 import types
 import random
 import unittest
-from encoder import *
+from genetic import *
 
 
 class EncoderMethod(unittest.TestCase):
