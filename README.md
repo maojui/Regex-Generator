@@ -1,4 +1,5 @@
 # Regex-Generator
+![https://travis-ci.com/maojui/Regex-Generator.svg?branch=master]
 
 # slide
 
