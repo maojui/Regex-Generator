@@ -2,11 +2,13 @@ import random
 from parser import *
 from genetic import genotype, crossover, mutation, nextGeneration
 
-def generator(target, POPULATION, GENERATION):
+def generator(target, POPULATION, GENERATION, match=None):
     g = 1
     result = []
     MAX_FITNESS = -1e9
     BEST_GENE = None
+    if match == None or match > len(target) :
+        match = len(target)
     BEST_REGEX = ""
     gene_count = len(genotype)
     pop = [random.sample(range(0,gene_count), gene_count) for _ in range(POPULATION)] 
@@ -15,7 +17,7 @@ def generator(target, POPULATION, GENERATION):
         # Get result
         current_generation = []
         for idx, gene in enumerate(pop):
-            g_res, fitness = parser(target, gene)
+            g_res, fitness = parser(random.sample(target,match), gene)
             result.append((fitness, ''.join(g_res)))
             current_generation.append((fitness, ''.join(g_res)))
             if fitness > MAX_FITNESS:

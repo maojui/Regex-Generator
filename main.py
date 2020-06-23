@@ -63,7 +63,7 @@ if TEST :
     result.append((fitness, ''.join(g_res)))
 
 else :
-    result = generator(target, POPULATION,GENERATION)
+    result = generator(target, POPULATION, GENERATION)
 
 for fit, regex in  sorted( set(result),key=lambda x : -x[0] )[:20]:
     print(f'{fit}\t\t{regex}')
