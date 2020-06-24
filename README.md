@@ -18,7 +18,7 @@ python server.py
 
 The service will run on : http://localhost:8080 
 
-![](https://i.imgur.com/Sej2cJO.png)
+![](https://i.imgur.com/0DzOMem.png)
 
 ## Example :
 
