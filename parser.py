@@ -1,7 +1,8 @@
 import re
+import random
 from const import *
-from decoder import transform_column
 from evalute import *
+from decoder import transform_column
 from utils import escape
 from utils import common_string, cs_compress, debug_print
 from itertools import combinations
@@ -24,19 +25,15 @@ def split_fixed(strings_set, filtered_set):
     cs_combination = []
     for i in range(len(filtered_set), 0, -1):
         cs_combination.extend(list(combinations(filtered_set, i)))
-
+    random.shuffle(cs_combination)
     # 嘗試各種排列方式
     for per in cs_combination :
         _const = None
         reg = str(f"({'|'.join([escape(p) for p in per])})")
+        reg = reg.replace('\\','\\\\')
         output_set = []
-        # print(reg, strings_set)
         for ss in strings_set :
-            try :
-                const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
-            except:
-                from IPython import embed
-                embed()
+            const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
             if _const == None :
                 _const = const # init
             if _const != None and const != _const :

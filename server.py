@@ -27,7 +27,6 @@ def reject(message):
 @sio.on('start')
 async def print_message(sid, message):
     print("Socket ID: " , sid)
-    await sio.emit('output', message['target'][::-1])
     target = message['target'].split('\n')
     GENERATION = int(message['generation'])
     POPULATION = int(message['population'])
@@ -75,4 +74,4 @@ app.router.add_get('/', index)
 
 # We kick off our server
 if __name__ == '__main__':
-    web.run_app(app)
+    web.run_app(app, host="localhost", port=8080)

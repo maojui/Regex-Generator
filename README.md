@@ -5,6 +5,17 @@
 
 https://docs.google.com/presentation/d/1iapTfVhuES_MD0Q3F4gFzuFOfiitQasKx4Ff0uKSirQ/edit?usp=sharing
 
+## Service
+
+```bash
+pip install -r requirements
+python server.py
+```
+
+The service will run on : http://localhost:8080 
+
+![](https://i.imgur.com/Sej2cJO.png)
+
 ## Usage : 
 
 ```bash
