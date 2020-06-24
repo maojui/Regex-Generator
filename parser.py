@@ -28,10 +28,15 @@ def split_fixed(strings_set, filtered_set):
     # 嘗試各種排列方式
     for per in cs_combination :
         _const = None
-        reg = f"({'|'.join([escape(p) for p in per])})"
+        reg = str(f"({'|'.join([escape(p) for p in per])})")
         output_set = []
+        # print(reg, strings_set)
         for ss in strings_set :
-            const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
+            try :
+                const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
+            except:
+                from IPython import embed
+                embed()
             if _const == None :
                 _const = const # init
             if _const != None and const != _const :

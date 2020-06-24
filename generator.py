@@ -34,3 +34,20 @@ def generator(target, POPULATION, GENERATION, match=None):
         pop = nextGeneration(pop, prob)
 
     return result
+
+if __name__ == "__main__":
+        
+    POPULATION = 100
+    GENERATION = 2
+    import sys, json
+    target = open(sys.argv[1],'r').read().split('\n')
+
+    # print("\nTarget :\n\t", end='')
+    # print('\n\t'.join(target), end='\n\n')
+
+    result = []
+
+    result = generator(target, POPULATION, GENERATION)
+
+    for fit, regex in  sorted( set(result),key=lambda x : -x[0] )[:20]:
+        print(f'{fit}\t\t{regex}')

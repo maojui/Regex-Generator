@@ -17,6 +17,10 @@ async def index(request):
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
 
+
+def reject(message):
+    res = {'ERROR' : message}
+    return res
 # If we wanted to create a new websocket endpoint,
 # use this decorator, passing in the name of the
 # event we wish to listen out for
@@ -25,13 +29,22 @@ async def print_message(sid, message):
     print("Socket ID: " , sid)
     await sio.emit('output', message['target'][::-1])
     target = message['target'].split('\n')
-    POPULATION = 100
-    GENERATION = 10
+    GENERATION = int(message['generation'])
+    POPULATION = int(message['population'])
+    match = int(message['match'])
+    if not 100 >= GENERATION >= 1 : 
+        await sio.emit('output', reject('Invalid generation.'))
+        return
+    if not 500 >= POPULATION >= 10 : 
+        await sio.emit('output', reject('Invalid population size.'))
+        return
+    if match != None and not POPULATION >= match >= 0 : 
+        await sio.emit('output', reject('match numbers must > 0 and smaller than populations'))
+        return
     g = 1
     result = []
     MAX_FITNESS = -1e9
     BEST_GENE = None
-    match = 1e9
     if match == None or match > len(target) :
         match = len(target)
     BEST_REGEX = ""
@@ -42,7 +55,6 @@ async def print_message(sid, message):
         # Get result
         current_generation = []
         for idx, gene in enumerate(pop):
-            print(random.sample(target,k=match))
             g_res, fitness = parser(random.sample(target,match), gene)
             result.append((fitness, ''.join(g_res)))
             current_generation.append((fitness, ''.join(g_res)))
@@ -52,18 +64,12 @@ async def print_message(sid, message):
                 BEST_REGEX = ''.join(g_res)
 
         await sio.emit('output',sorted( set(result),key=lambda x : -x[0] ))
-        # for fit, regex in  sorted( set(result),key=lambda x : -x[0] )[:20]:
-        #     print(f'{fit}\t\t{regex}')
-        print(f'{i} Generation :')
-        print(f'{MAX_FITNESS} {BEST_REGEX}')
-        print(current_generation)
+
         # Next generation
         total = sum([g[0] for g in current_generation])
         prob = [g[0]/total for g in current_generation]
         pop = nextGeneration(pop, prob)
 
-    return result
-    
 # We bind our aiohttp endpoint to our app router
 app.router.add_get('/', index)
 

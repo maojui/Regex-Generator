@@ -6,6 +6,11 @@ import string
 from generator import generator
 
 testset = {
+    0 :[
+        'c:\\windows\\temp\\radffdc7.tmp\\kctzrdpurmfr.exe',
+        'c:\\windows\\temp\\radffdc9.tmp\\ixplkcrudfbuo.exe',
+        'c:\\windows\\temp\\radffdca.tmp\\ksyphabjmouoerd.exe'
+    ],
     1 :['kakbb', 'e3new','aadmm'],
     2 :['ASH1P', 'ASH1P', 'ASHR1P', "BSH1P"],
     3 :['ASHIPEA', 'ASH1PEB', 'ASHRIMPEC', "BSHIPED", "PEBSHI_SHI"],
