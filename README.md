@@ -1,13 +1,17 @@
 # Regex-Generator
+
 [![Build Status](https://travis-ci.com/maojui/Regex-Generator.svg?branch=master)](https://travis-ci.com/maojui/Regex-Generator)
 
 ## Slide
 
 https://docs.google.com/presentation/d/1iapTfVhuES_MD0Q3F4gFzuFOfiitQasKx4Ff0uKSirQ/edit?usp=sharing
 
-## Service
+
+## Usage : 
 
 ```bash
+git clone https://github.com/maojui/Regex-Generator
+cd Regex-Generator
 pip install -r requirements
 python server.py
 ```
@@ -15,14 +19,6 @@ python server.py
 The service will run on : http://localhost:8080 
 
 ![](https://i.imgur.com/Sej2cJO.png)
-
-## Usage : 
-
-```bash
-git clone https://github.com/maojui/Regex-Generator
-cd Regex-Generator
-python main.py 12
-```
 
 ## Example :
 
