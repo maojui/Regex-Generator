@@ -51,7 +51,7 @@ def split_fixed(strings_set, filtered_set):
         else :
             return output_set
     else :
-        print("---NOTHING FIXED STRING TO SPLIT---")
+        debug_print("---NO FIXED STRING TO SPLIT---", [])
         return [ [strs] for strs in strings_set]
 
 def preprocessor(target):

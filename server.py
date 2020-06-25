@@ -31,10 +31,10 @@ async def print_message(sid, message):
     GENERATION = int(message['generation'])
     POPULATION = int(message['population'])
     match = int(message['match'])
-    if not 100 >= GENERATION >= 1 : 
+    if not 30 >= GENERATION >= 1 : 
         await sio.emit('output', reject('Invalid generation.'))
         return
-    if not 500 >= POPULATION >= 10 : 
+    if not 100 >= POPULATION >= 10 : 
         await sio.emit('output', reject('Invalid population size.'))
         return
     if match != None and not POPULATION >= match >= 0 : 
@@ -65,9 +65,8 @@ async def print_message(sid, message):
         await sio.emit('output',sorted( set(result),key=lambda x : -x[0] ))
 
         # Next generation
-        total = sum([g[0] for g in current_generation])
-        prob = [g[0]/total for g in current_generation]
-        pop = nextGeneration(pop, prob)
+        fitness = [g[0] for g in current_generation]
+        pop = nextGeneration(pop, fitness)
 
 # We bind our aiohttp endpoint to our app router
 app.router.add_get('/', index)

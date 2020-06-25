@@ -29,9 +29,8 @@ def generator(target, POPULATION, GENERATION, match=None):
         print(f'{MAX_FITNESS} {BEST_REGEX}')
         
         # Next generation
-        total = sum([g[0] for g in current_generation])
-        prob = [g[0]/total for g in current_generation]
-        pop = nextGeneration(pop, prob)
+        fitness = [g[0] for g in current_generation]
+        pop = nextGeneration(pop, fitness)
 
     return result
 

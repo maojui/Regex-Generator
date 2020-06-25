@@ -123,7 +123,13 @@ def crossover(p1, p2, mask=None):
             gene[idx] = p2[idx]
     return gene
 
-def nextGeneration(population, prob):
+def nextGeneration(population, fitness):
+    
+    min_fitness = min(fitness)
+    if min_fitness < 0 :
+        fitness = [min_fitness + f for f in fitness]
+    prob = [f for f in fitness]
+    
     offspring = []
     for _ in range(len(population)//2):
         

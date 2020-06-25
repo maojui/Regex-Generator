@@ -8,14 +8,14 @@ from utils import longest_common_subseqence as lcs
 __all__ = ['transform_column']
 
 regex_table = {
-    INDEX_TABLE(0x00) : '\d',
+    INDEX_TABLE(0x00) : '\\d',
     INDEX_TABLE(0x01) : '[A-Z]',
     INDEX_TABLE(0x02) : '[a-z]',
     INDEX_TABLE(0x03) : '[A-Za-z]',
     INDEX_TABLE(0x04) : '[0-9A-F]',
     INDEX_TABLE(0x05) : '[0-9a-f]',
-    INDEX_TABLE(0x06) : '\w',
-    INDEX_TABLE(0x07) : '\s',
+    INDEX_TABLE(0x06) : '\\w',
+    INDEX_TABLE(0x07) : '\\s',
     INDEX_TABLE(0x08) : space_only_format,
     INDEX_TABLE(0x09) : '.',
     INDEX_TABLE(0x0a) : char_or_format,

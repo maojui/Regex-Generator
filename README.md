@@ -1,6 +1,7 @@
 # Regex-Generator
 
 [![Build Status](https://travis-ci.com/maojui/Regex-Generator.svg?branch=master)](https://travis-ci.com/maojui/Regex-Generator)
+[![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/maojui/Regex-Generator/blob/master/LICENSE)
 
 ## Slide
 
