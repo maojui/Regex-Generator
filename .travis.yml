@@ -10,4 +10,4 @@ install:
     - pip install -r requirements
 
 script:
-    - python -m pytest
+    - bash -c 'cd src && python -m pytest ../tests'
