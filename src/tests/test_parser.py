@@ -1,5 +1,5 @@
 import unittest
-from parser import cs_filter, split_fixed
+from ..parser import cs_filter, split_fixed
 
 class ParserMethod(unittest.TestCase):
     

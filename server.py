@@ -1,8 +1,8 @@
 import socketio
 from aiohttp import web
 import random
-from parser import *
-from genetic import genotype, crossover, mutation, nextGeneration
+from src.parser import *
+from src.genetic import genotype, crossover, mutation, nextGeneration
 
 # creates a new Async Socket IO Server
 sio = socketio.AsyncServer()

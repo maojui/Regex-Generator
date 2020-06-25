@@ -1,4 +1,4 @@
-from const import DEBUG, ESCAPE
+from .const import DEBUG, ESCAPE
 
 def debug_print(title: str, obj) -> bool:
     if DEBUG:

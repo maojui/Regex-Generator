@@ -1,6 +1,6 @@
 import unittest
-from utils import cs_compress, common_string
-from utils import _longest_common_subseqence as _lcs, longest_common_subseqence as lcs
+from ..utils import cs_compress, common_string
+from ..utils import _longest_common_subseqence as _lcs, longest_common_subseqence as lcs
 
 class UtilsMethod(unittest.TestCase):
 

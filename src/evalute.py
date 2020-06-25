@@ -1,5 +1,5 @@
 import re
-from const import INDEX_TABLE
+from .const import INDEX_TABLE
 
 __all__ = ['fitness']
 

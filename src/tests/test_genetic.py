@@ -1,7 +1,7 @@
 import types
 import random
 import unittest
-from genetic import *
+from ..genetic import *
 
 
 class GeneticMethod(unittest.TestCase):

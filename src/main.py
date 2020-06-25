@@ -3,7 +3,7 @@ import os
 import base64
 import random
 import string
-from generator import generator
+from .generator import generator
 
 testset = {
     0 :[

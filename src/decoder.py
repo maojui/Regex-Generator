@@ -1,9 +1,9 @@
 import random
 import types
-from const import *
-from genetic import encoder
-from formatter import *
-from utils import longest_common_subseqence as lcs
+from .const import *
+from .genetic import encoder
+from .formatter import *
+from .utils import longest_common_subseqence as lcs
 
 __all__ = ['transform_column']
 

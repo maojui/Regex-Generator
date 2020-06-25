@@ -1,5 +1,5 @@
 import unittest
-from decoder import find_sequence
+from ..decoder import find_sequence
 
 class MakerMethod(unittest.TestCase):
 

@@ -1,5 +1,5 @@
 import random
-from const import *
+from .const import *
 
 numbers                 = lambda x: x in DIGIT
 upper_alpha             = lambda x: x in UPPER

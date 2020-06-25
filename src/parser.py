@@ -1,10 +1,10 @@
 import re
 import random
-from const import *
-from evalute import *
-from decoder import transform_column
-from utils import escape
-from utils import common_string, cs_compress, debug_print
+from .const import *
+from .evalute import *
+from .decoder import transform_column
+from .utils import escape
+from .utils import common_string, cs_compress, debug_print
 from itertools import combinations
 
 def cs_filter(cs_set):

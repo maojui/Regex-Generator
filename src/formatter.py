@@ -1,4 +1,4 @@
-from const import *
+from .const import *
 import random
 
 def type_counter(columns):

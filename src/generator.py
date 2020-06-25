@@ -1,6 +1,6 @@
 import random
-from parser import *
-from genetic import genotype, crossover, mutation, nextGeneration
+from .parser import *
+from .genetic import genotype, crossover, mutation, nextGeneration
 
 def generator(target, POPULATION, GENERATION, match=None):
     g = 1
