@@ -1,4 +1,5 @@
 from .const import *
+from .utils import escape_format
 import random
 
 def type_counter(columns):
@@ -103,17 +104,6 @@ def or_format(output, frequency, rangestr='') :
         return f"[{rangestr + escape_format(output,True)}]" + frequency
     else :
         return escape_format(output) + frequency
-
-def escape_format(strs, inside=False) :
-    tmp = ''
-    for c in strs :
-        if inside and c in INESCAPE:
-            tmp += '\\' + c
-        elif not inside and c in ESCAPE :
-            tmp += '\\' + c
-        else :
-            tmp += c
-    return tmp
 
 def char_or_format(strs, cnts):
     output = ''.join(sorted(set(''.join(strs))))

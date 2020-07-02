@@ -1,5 +1,5 @@
 import unittest
-from ..utils import cs_compress, common_string
+from ..utils import cs_compress, common_string, escape_format
 from ..utils import _longest_common_subseqence as _lcs, longest_common_subseqence as lcs
 
 class UtilsMethod(unittest.TestCase):
@@ -21,6 +21,10 @@ class UtilsMethod(unittest.TestCase):
     def test_cs_compress(self):
         commons = {'SH', 'PE', 'S', 'E', 'H', 'P'}
         self.assertEqual(sorted(list(cs_compress(commons))), ['PE', 'SH'])
+    
+    def test_escape_format(self):
+        self.assertEqual(escape_format('c:\\windows'), 'c:\\\\windows')
+
 
 if __name__ == '__main__':
     unittest.main()

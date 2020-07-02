@@ -1,9 +1,10 @@
 import re
 import random
+import hashlib
 from .const import *
 from .evalute import *
 from .decoder import transform_column
-from .utils import escape
+from .utils import escape_format
 from .utils import common_string, cs_compress, debug_print
 from itertools import combinations
 
@@ -24,16 +25,17 @@ def split_fixed(strings_set, filtered_set):
     # 列出這些固定 substring 所有排列方式
     cs_combination = []
     for i in range(len(filtered_set), 0, -1):
-        cs_combination.extend(list(combinations(filtered_set, i)))
-    random.shuffle(cs_combination)
+        _next_combination = list(combinations(filtered_set, i))
+        random.shuffle(_next_combination)
+        cs_combination.extend(_next_combination)
+
     # 嘗試各種排列方式
     for per in cs_combination :
         _const = None
-        reg = str(f"({'|'.join([escape(p) for p in per])})")
-        reg = reg.replace('\\','\\\\')
+        reg = str(f"({'|'.join([escape_format(p) for p in per])})")
         output_set = []
         for ss in strings_set :
-            const = '&&&&&&&&&&&'.join([find.group() for find in re.finditer(reg, ss)])
+            const = '&'.join([ hashlib.md5(find.group().encode()).hexdigest() for find in re.finditer(reg, ss)])
             if _const == None :
                 _const = const # init
             if _const != None and const != _const :
@@ -60,7 +62,6 @@ def preprocessor(target):
     cs_set = cs_compress(cs_set)
     filtered_set = list(cs_filter(cs_set))
     split_str = split_fixed(target, filtered_set)
-
     # if DEBUG:
     debug_print("common_string", cs_set)
     debug_print("cs_filter", filtered_set)
@@ -68,10 +69,9 @@ def preprocessor(target):
 
     return split_str, filtered_set
 
-def parser(targets, gene, positive=[], negative=[]):
+def parser(arr, filtered_set, gene, positive=[], negative=[]):
     output = []
     value = 0
-    arr, filtered_set = preprocessor(targets)
     for i in range(len(arr[0])):
         column = [val[i] for val in arr]
 
@@ -79,13 +79,14 @@ def parser(targets, gene, positive=[], negative=[]):
         if i == 0 and len(''.join(column)) == 0:
             output.append('^')
 
-        # 如果那列是有對應的 Common string
-        elif type(column[0]) == int:
-            output.append(escape(filtered_set[column[0]]))
-
         # 如果大家在最後面都沒東西
         elif i == len(arr[0])-1 and len(''.join(column)) == 0:
             output.append('$')
+
+        # 如果那列是有對應的 Common string
+        elif type(column[0]) == int:
+            value += 500
+            output.append(escape_format(filtered_set[column[0]]))
 
         # 其他區塊，另外 Parse，這裡要放基因
         else:
@@ -93,17 +94,5 @@ def parser(targets, gene, positive=[], negative=[]):
             seq = fitness(possible, seq, positive, negative)
             output.append(possible)
             value += seq
-
+    # print(output)
     return output, value
-
-if __name__ == "__main__":
-
-    import random
-    output = ['ASHIAAA', 'ASH1PGB', 'ASHRIMPDC', "BSHIKED"]
-    gene = [0x11, 9]
-    # random.shuffle(gene)
-    split_str, filtered_set = preprocessor(output)
-    g_res, fitness = parser(split_str, filtered_set, gene, output)
-    print('\nGeneralize Result:')
-    print('\t', ''.join(g_res))
-    print('fitness:', fitness)

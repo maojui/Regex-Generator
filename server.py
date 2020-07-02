@@ -51,10 +51,11 @@ async def print_message(sid, message):
     pop = [random.sample(range(0,gene_count), gene_count) for _ in range(POPULATION)] 
     for i in range(1,GENERATION+1) :
         
+        arr, filtered_set = preprocessor(random.sample(target,match))
         # Get result
         current_generation = []
         for idx, gene in enumerate(pop):
-            g_res, fitness = parser(random.sample(target,match), gene)
+            g_res, fitness = parser(arr, filtered_set, gene)
             result.append((fitness, ''.join(g_res)))
             current_generation.append((fitness, ''.join(g_res)))
             if fitness > MAX_FITNESS:

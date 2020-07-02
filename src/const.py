@@ -4,7 +4,7 @@ import string
 DEBUG = False
 INDEX_TABLE = lambda x : chr(x)
 
-ESCAPE = '{([])^$.|*+?}'    # Inside () or Outside
+ESCAPE = '{([])^$.|*+?}\\'    # Inside () or Outside
 INESCAPE = '^-'           # Inside []
 DIGIT = string.digits
 UPPER = string.ascii_uppercase

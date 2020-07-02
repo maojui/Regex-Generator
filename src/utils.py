@@ -1,4 +1,4 @@
-from .const import DEBUG, ESCAPE
+from .const import DEBUG, ESCAPE, INESCAPE
 
 def debug_print(title: str, obj) -> bool:
     if DEBUG:
@@ -74,11 +74,13 @@ def longest_common_subseqence(type_list):
         subsequence = _longest_common_subseqence(subsequence, t)
     return subsequence
 
-def escape(string):
-    s = []
-    for c in list(string):
-        if c in ESCAPE:
-            s.append("\\" + c)
-        else:
-            s.append(c)
-    return ''.join(s)
+def escape_format(strs, inside=False) :
+    tmp = ''
+    for c in strs :
+        if inside and c in INESCAPE:
+            tmp += '\\' + c
+        elif not inside and c in ESCAPE :
+            tmp += '\\' + c
+        else :
+            tmp += c
+    return tmp
