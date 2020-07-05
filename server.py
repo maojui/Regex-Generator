@@ -17,10 +17,10 @@ async def index(request):
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
 
-
 def reject(message):
     res = {'ERROR' : message}
     return res
+
 # If we wanted to create a new websocket endpoint,
 # use this decorator, passing in the name of the
 # event we wish to listen out for
